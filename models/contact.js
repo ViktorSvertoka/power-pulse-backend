@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const Joi = require('joi');
 
-const handleMongooseError = require('../helpers/handleMongooseError');
+const { handleMongooseError } = require('../helpers');
 
 const nameRegex = '^[A-Z][a-z]+ [A-Z][a-z]+$';
 const phoneRegex = '^[0-9]{3}-[0-9]{3}-[0-9]{4}$';
