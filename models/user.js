@@ -4,27 +4,27 @@ const Joi = require('joi');
 
 const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
 
-const handleMongooseError = require('../helpers/handleMongooseError');
+const { handleMongooseError } = require('../helpers');
 
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      minLength: 3,
+      required: [true, 'Name is required'],
+    },
+
     email: {
       type: String,
       match: emailRegex,
-      required: [true, 'Set email for contact'],
+      required: [true, 'Email is required'],
       unique: true,
     },
 
     password: {
       type: String,
       minLength: 6,
-      required: [true, 'Set password for contact'],
-    },
-
-    subscription: {
-      type: String,
-      enum: ['starter', 'pro', 'business'],
-      default: 'starter',
+      required: [true, 'Password is required'],
     },
 
     token: {
@@ -53,6 +53,10 @@ const userSchema = new Schema(
 userSchema.post('save', handleMongooseError);
 
 const registerSchema = Joi.object({
+  name: Joi.string().min(3).required().messages({
+    'any.required': `Missing required name field`,
+  }),
+
   email: Joi.string().pattern(new RegExp(emailRegex)).required().messages({
     'any.required': `Missing required email field`,
   }),

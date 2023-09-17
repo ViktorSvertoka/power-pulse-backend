@@ -12,9 +12,7 @@ const { nanoid } = require('nanoid');
 
 const { User } = require('../models/user');
 
-const HttpError = require('../helpers/HttpError');
-const ctrlWrapper = require('../helpers/ctrlWrapper');
-const sendEmail = require('../helpers/sendEmail');
+const { sendEmail, ctrlWrapper, HttpError } = require('../helpers');
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
@@ -44,15 +42,54 @@ const register = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: 'Verify your email',
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click verify email</a>`,
+    html: `
+    <html>
+      <head>
+        <style>
+          body {
+            font-size: 24px;
+          }
+
+          .container {
+            max-width: 70%;
+            margin: 0 auto;
+            padding: 20px;
+            background: #040404;
+            font-family: "Cormorant Garamond", serif;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 237, 232, 0.20);
+            }
+
+          h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+          }
+
+          a{
+            display: block;
+            font-size: 20px;
+            text-align: center;
+          }
+
+        </style>
+      </head>
+      <body>
+        <div class='container'>
+          <h2>Hello from Backend, here\`s you verify link 👇️️️️️️</h2>
+          <br />
+          <a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationToken}">Click for verify email</a>
+        </div>
+      </body>
+    </html>`,
   };
 
   await sendEmail(verifyEmail);
 
   res.status(201).json({
     user: {
+      name: newUser.name,
       email: newUser.email,
-      subscription: newUser.subscription,
     },
   });
 };
@@ -88,7 +125,7 @@ const repeatEmailVerify = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: 'Verify your email',
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${user.verificationToken}">Click verify email</a>`,
   };
 
   await sendEmail(verifyEmail);
@@ -124,17 +161,17 @@ const login = async (req, res) => {
   res.status(200).json({
     token: token,
     user: {
+      name: user.name,
       email: user.email,
-      subscription: user.subscription,
     },
   });
 };
 
 const current = async (req, res) => {
-  const { email, subscription } = req.user;
+  const { name, email } = req.user;
   res.status(200).json({
+    name,
     email,
-    subscription,
   });
 };
 
