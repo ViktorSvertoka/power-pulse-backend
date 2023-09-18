@@ -80,10 +80,6 @@ const emailSchema = Joi.object({
   email: Joi.string().pattern(new RegExp(emailRegex)).required().messages({
     'any.required': `Missing required email field`,
   }),
-
-  password: Joi.string().min(6).required().messages({
-    'any.required': `Missing required password field`,
-  }),
 });
 
 const schemas = {

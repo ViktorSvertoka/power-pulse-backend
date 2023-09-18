@@ -8,6 +8,9 @@ const path = require('path');
 const fs = require('fs/promises');
 const Jimp = require('jimp');
 
+// const cloudinaryConfig = require('../cloudinaryConfig');
+// const uploadCloud = require('../middlewares/uploadCloud');
+
 const { nanoid } = require('nanoid');
 
 const { User } = require('../models/user');
@@ -27,10 +30,16 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-
   const avatarURL = gravatar.url(email);
-
   const verificationToken = nanoid();
+
+  const verifyEmail = {
+    to: email,
+    subject: 'Verify email',
+    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Click to verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
 
   const newUser = await User.create({
     ...req.body,
@@ -38,53 +47,6 @@ const register = async (req, res) => {
     avatarURL,
     verificationToken,
   });
-
-  const verifyEmail = {
-    to: email,
-    subject: 'Verify your email',
-    html: `
-    <html>
-      <head>
-        <style>
-          body {
-            font-size: 24px;
-          }
-
-          .container {
-            max-width: 70%;
-            margin: 0 auto;
-            padding: 20px;
-            background: #040404;
-            font-family: "Cormorant Garamond", serif;
-            border-radius: 12px;
-            border: 1px solid rgba(239, 237, 232, 0.20);
-            }
-
-          h2 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            text-align: center;
-          }
-
-          a{
-            display: block;
-            font-size: 20px;
-            text-align: center;
-          }
-
-        </style>
-      </head>
-      <body>
-        <div class='container'>
-          <h2>Hello from Backend, here\`s you verify link 👇️️️️️️</h2>
-          <br />
-          <a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationToken}">Click for verify email</a>
-        </div>
-      </body>
-    </html>`,
-  };
-
-  await sendEmail(verifyEmail);
 
   res.status(201).json({
     user: {
@@ -114,6 +76,7 @@ const verifyEmail = async (req, res) => {
 const repeatEmailVerify = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
+
   if (!user) {
     throw HttpError(404, 'User not found');
   }
@@ -185,6 +148,20 @@ const logout = async (req, res) => {
   res.status(204).json({});
 };
 
+const addAvatar = async (req, res) => {
+  try {
+    const avatarURL = req.file.path;
+
+    const { _id } = req.user;
+    await User.findByIdAndUpdate(_id, { avatarURL });
+
+    res.status(200).json({ avatarURL });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Avatar upload failed' });
+  }
+};
+
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
@@ -201,12 +178,12 @@ const updateAvatar = async (req, res) => {
   await User.findByIdAndUpdate(_id, { avatarURL });
   res.status(200).json({ avatarURL });
 };
-
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   current: ctrlWrapper(current),
   logout: ctrlWrapper(logout),
+  addAvatar: ctrlWrapper(addAvatar),
   updateAvatar: ctrlWrapper(updateAvatar),
 
   verifyEmail: ctrlWrapper(verifyEmail),
