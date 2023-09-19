@@ -50,6 +50,7 @@ const register = async (req, res) => {
       name: newUser.name,
       email: newUser.email,
     },
+    message: `Verify link was send to ${newUser.email}, token you can get after login`,
   });
 };
 
