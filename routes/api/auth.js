@@ -8,7 +8,6 @@ const {
   validateBody,
   checkBody,
   authenticate,
-  upload,
   uploadCloud,
 } = require('../../middlewares');
 
@@ -38,21 +37,8 @@ router.post('/logout', authenticate, ctrl.logout);
 router.patch(
   '/avatars',
   authenticate,
-  upload.single('avatar'),
-  ctrl.updateAvatar
-);
-
-router.post(
-  '/avatar',
-  authenticate,
   uploadCloud.single('avatar'),
-  ctrl.addAvatar
-);
-router.post(
-  '/recipe',
-  authenticate,
-  uploadCloud.single('recipe'),
-  ctrl.addAvatar
+  ctrl.updateAvatar
 );
 
 module.exports = router;

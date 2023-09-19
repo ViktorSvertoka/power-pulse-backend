@@ -4,19 +4,19 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const gravatar = require('gravatar');
-const path = require('path');
-const fs = require('fs/promises');
-const Jimp = require('jimp');
 
 const { nanoid } = require('nanoid');
 
 const { User } = require('../models/user');
 
-const { sendEmail, ctrlWrapper, HttpError } = require('../helpers');
+const {
+  sendEmail,
+  ctrlWrapper,
+  HttpError,
+  generateVerifyMessage,
+} = require('../helpers');
 
-const { SECRET_KEY, BASE_URL } = process.env;
-
-const avatarDir = path.join(__dirname, '../', 'public', 'avatars');
+const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -32,8 +32,8 @@ const register = async (req, res) => {
 
   const verifyEmail = {
     to: email,
-    subject: 'Verify email',
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click to verify email</a>`,
+    subject: 'Verify your email',
+    html: generateVerifyMessage(verificationToken),
   };
 
   await sendEmail(verifyEmail);
@@ -86,7 +86,7 @@ const repeatEmailVerify = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: 'Verify your email',
-    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${user.verificationToken}">Click verify email</a>`,
+    html: generateVerifyMessage(user.verificationToken),
   };
 
   await sendEmail(verifyEmail);
@@ -124,15 +124,18 @@ const login = async (req, res) => {
     user: {
       name: user.name,
       email: user.email,
+      avatar: user.avatarURL,
     },
   });
 };
 
 const current = async (req, res) => {
-  const { name, email } = req.user;
+  const { name, email, avatarURL } = req.user;
+
   res.status(200).json({
     name,
     email,
+    avatarURL,
   });
 };
 
@@ -143,45 +146,23 @@ const logout = async (req, res) => {
   if (!result) {
     throw HttpError(404, 'Not found');
   }
-  res.status(204).json({});
-};
-
-const addAvatar = async (req, res) => {
-  try {
-    const avatarURL = req.file.path;
-
-    const { _id } = req.user;
-    await User.findByIdAndUpdate(_id, { avatarURL });
-
-    res.status(200).json({ avatarURL });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Avatar upload failed' });
-  }
+  res.status(204).json({ message: 'logout was successfull' });
 };
 
 const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
-  const { path: tempUpload, originalname } = req.file;
-  const img = await Jimp.read(tempUpload);
-  await img
-    .autocrop()
-    .cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_MIDDLE)
-    .writeAsync(tempUpload);
+  const avatarURL = req.file.path;
 
-  const filename = `${Date.now()}-${originalname}`;
-  const resultUpload = path.join(avatarDir, filename);
-  await fs.rename(tempUpload, resultUpload);
-  const avatarURL = path.join('avatars', filename);
+  const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { avatarURL });
+
   res.status(200).json({ avatarURL });
 };
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   current: ctrlWrapper(current),
   logout: ctrlWrapper(logout),
-  addAvatar: ctrlWrapper(addAvatar),
   updateAvatar: ctrlWrapper(updateAvatar),
 
   verifyEmail: ctrlWrapper(verifyEmail),
