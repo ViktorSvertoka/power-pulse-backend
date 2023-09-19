@@ -8,9 +8,6 @@ const path = require('path');
 const fs = require('fs/promises');
 const Jimp = require('jimp');
 
-// const cloudinaryConfig = require('../cloudinaryConfig');
-// const uploadCloud = require('../middlewares/uploadCloud');
-
 const { nanoid } = require('nanoid');
 
 const { User } = require('../models/user');
@@ -36,7 +33,7 @@ const register = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: 'Verify email',
-    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Click to verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click to verify email</a>`,
   };
 
   await sendEmail(verifyEmail);
@@ -53,6 +50,7 @@ const register = async (req, res) => {
       name: newUser.name,
       email: newUser.email,
     },
+    message: `Verify link was send to ${newUser.email}, token you can get after login`,
   });
 };
 
