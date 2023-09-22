@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const authRouter = require('./routes/api/auth');
 const exercisesRouter = require('./routes/api/exercises');
+const diaryRouter = require('./routes/api/diary');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.static('public'));
 
 app.use('/api/auth', authRouter);
 app.use('/exercises', exercisesRouter);
+app.use('/diary', diaryRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
