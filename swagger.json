@@ -1,0 +1,489 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Power-pulse",
+		"description": "Showing off swagger-ui-express",
+		"license": {
+			"name": "MIT",
+			"url": "https://opensource.org/licenses/MIT"
+		 }
+	},
+	"consumes": ["application/json"],
+	"produces": ["application/json"],
+	"servers": [{ "url": "http://localhost:3000" }, {"url": "https://power-pulse-back-end.onrender.com"}],
+	"tags": [
+	  {
+		 "name": "Auth",
+		 "description": "Authorization endpoints"
+	  },
+	  {
+		"name": "Exercises",
+		"description": "Exercises endpoints"
+	 }
+	],
+	"paths": {
+		"/api/auth/register": {
+			"post": {
+				"tags": ["Auth"],
+				"summary": "User registration",
+				"paramrters": [],
+				"requestBody": {
+					"description": "Registration's object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegistrationRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Successful operation",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/RegistrationResponse"
+							 }
+						  }
+						}
+					},
+					"400": {
+						"description": "Bad request",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}						
+					},
+					"409": {
+						"description": "Provided email already exists",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					}		
+				}
+			}
+		},
+		"/api/auth/login": {
+			"post": {
+				"tags": ["Auth"],
+				"summary": "User login",
+				"paramrters": [],
+				"requestBody": {
+					"description": "Login object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/LoginResponse"
+							 }
+						  }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}						
+					}
+				}
+			}	
+		},
+		"/api/auth/current": {
+			"get": {
+				"tags": ["Auth"],
+				"summary": "Current user",
+				"paramrters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/CurrentResponse"
+							 }
+						  }
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					}
+				}
+			}	
+		},
+		"/api/auth/logout": {
+			"post": {
+				"tags": ["Auth"],
+				"summary": "User logout",
+				"paramrters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Logout object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LogoutRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"204": {
+						"description": "No Content",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/LogoutResponse"
+							 }
+						  }
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/avatars": {
+			"patch": {
+				"tags": ["Auth"],
+				"summary": "Update user avatar",
+				"paramrters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Update avatar object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AvatarsRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/AvatarsResponse"
+							 }
+						  }
+						}
+					}					
+				}
+			}
+		},
+		"/api/auth/verify": {
+			"post": {
+				"tags": ["Auth"],
+				"summary": "Verify email",
+				"paramrters": [],
+				"requestBody": {
+					"description": "Verification email object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/VerifyEmailRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/VerifyEmailResponse"
+							 }
+						  }
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/verify/:verificationToken": {
+			"get": {
+				"tags": ["Auth"],
+				"summary": "Verify email",
+				"parameters": [
+					{"in": "qery", "name": "verificationToken"}
+				],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/VerifyEmailResponse"
+							 }
+						  }
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							 }
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"RegistrationRequest": {
+				"type": "object",
+				"required": ["name", "email", "password"],
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User email",
+						"format": "email"
+					},
+					"password": {
+						"type": "string",
+						"description": "User password",
+						"example": "qwe123"
+					}
+				}
+			},
+			"LoginRequest": {
+				"type": "object",
+				"required": ["email", "password"],
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User email",
+						"format": "email"
+					},
+					"password": {
+						"type": "string",
+						"description": "User password",
+						"example": "qwe123"
+					}
+				}
+			},
+			"LogoutRequest": {
+				"type": "object",
+				"required": ["_id"],
+				"properties": {
+					"_id": {
+						"type": "string",
+						"description": "User id"
+					}
+				}
+			},
+			"AvatarsRequest": {
+				"type": "object",
+				"required": ["_id", "avatarURL"],
+				"properties": {
+					"_id": {
+						"type": "string",
+						"description": "User id"
+					},
+					"avatarURL": {
+						"type": "string",
+						"description": "New avatar URL"
+					}
+				}
+			},
+			"VerifyEmailRequest": {
+				"type": "object",
+				"required": ["email"],
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User email",
+						"format": "email"
+					}
+				}
+			},
+			"RegistrationResponse": {
+				"type": "object",
+				"properties": {
+					"user": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "User name"
+							},
+							"email": {
+								"type": "string",
+								"description": "User email"
+							}
+						}	
+					},
+					"message": {
+						"type": "string",
+						"descroption": "Message"
+					} 
+				}
+			},
+			"LoginResponse": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string",
+						"description": "User token"
+					},
+					"user": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "User name"
+							},
+							"email": {
+								"type": "string",
+								"description": "User email"
+							},
+							"avatar": {
+								"type": "string",
+								"descroption": "Avatar URL"
+							}
+						}	
+					}					 
+				}
+			},
+			"CurrentResponse": {
+				"type": "object",
+				"required": ["name", "email", "avatarURL"],
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User email",
+						"format": "email"
+					},
+					"avatarURL": {
+						"type": "string",
+						"description": "Avatar URL"
+					}
+				}
+			},
+			"LogoutResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"descroption": "Message",
+						"example": "logout was successfull"
+					}
+				}
+			},
+			"AvatarsResponse": {
+				"type": "object",
+				"properties": {
+					"avatarURL": {
+						"type": "string",
+						"descroption": "New avatar URL"
+					}
+				}
+			},
+			"VerifyEmailResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"descroption": "Message"
+					}
+				}
+			},
+			"ErrorResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"descroption": "Message"
+					}
+				}
+			}			
+		},
+		"securitySchemes": {
+			"Bearer": {
+			  "type": "http",
+			  "scheme": "bearer",
+			  "bearerFormat": "JWT"
+			}
+		}
+	}
+	
+}
