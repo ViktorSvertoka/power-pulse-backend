@@ -1,7 +1,7 @@
 {
 	"openapi": "3.1.0",
 	"info": {
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"title": "Power-pulse",
 		"description": "Showing off swagger-ui-express",
 		"license": {
@@ -223,7 +223,7 @@
 		"/api/auth/verify": {
 			"post": {
 				"tags": ["Auth"],
-				"summary": "Verify email",
+				"summary": "Verify email (send virification email)",
 				"paramrters": [],
 				"requestBody": {
 					"description": "Verification email object",
@@ -273,7 +273,7 @@
 		"/api/auth/verify/{:verificationToken}": {
 			"get": {
 				"tags": ["Auth"],
-				"summary": "Verify email",
+				"summary": "Verify email with a verification token",
 				"parameters": [
 					{
 						"in": "path",
@@ -435,7 +435,7 @@
 		"/diary/addproduct": {
 			"post": {
 				"tags": ["Diary"],
-				"summary": "Add products by id",
+				"summary": "Add products",
 				"parameters": [],
 				"security": [{ "Bearer": [] }],
 				"requestBody": {
