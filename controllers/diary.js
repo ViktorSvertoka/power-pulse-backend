@@ -9,11 +9,21 @@ const addProduct = async (req, res) => {
   res.status(201).json(result);
 };
 
+const getProduct = async (req, res) => {
+  const { _id: owner } = req.user;
+  const products = await Product.find({ owner, productId: { $exists: true } });
+  res.json(products);
+};
+
 const deleteProduct = async (req, res) => {
   const data = req.body;
   const { _id: owner } = req.user;
 
-  const existingProduct = await Product.findOne({ data, owner });
+  const existingProduct = await Product.findOne({
+    data,
+    owner,
+    productId: { $exists: true },
+  });
   if (!existingProduct) {
     throw HttpError(404, 'Not found');
   }
@@ -27,11 +37,24 @@ const addExercise = async (req, res) => {
   res.status(201).json(result);
 };
 
+const getExercise = async (req, res) => {
+  const { _id: owner } = req.user;
+  const products = await diaryExercise.find({
+    owner,
+    exerciseId: { $exists: true },
+  });
+  res.json(products);
+};
+
 const deleteExercise = async (req, res) => {
   const data = req.body;
   const { _id: owner } = req.user;
 
-  const doneExercise = await diaryExercise.findOne({ data, owner });
+  const doneExercise = await diaryExercise.findOne({
+    data,
+    owner,
+    exerciseId: { $exists: true },
+  });
   if (!doneExercise) {
     throw HttpError(404, 'Not found');
   }
@@ -39,11 +62,11 @@ const deleteExercise = async (req, res) => {
   res.status(200).json({ message: 'Exercise deleted' });
 };
 
-
-
 module.exports = {
   addProduct: ctrlWrapper(addProduct),
   deleteProduct: ctrlWrapper(deleteProduct),
   addExercise: ctrlWrapper(addExercise),
-  deleteExercise : ctrlWrapper(deleteExercise),
+  deleteExercise: ctrlWrapper(deleteExercise),
+  getProduct: ctrlWrapper(getProduct),
+  getExercise: ctrlWrapper(getExercise),
 };

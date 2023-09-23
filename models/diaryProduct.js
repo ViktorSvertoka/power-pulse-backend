@@ -41,10 +41,10 @@ const productSchemaJoi = Joi.object({
   calories: Joi.number().min(1).required(),
 });
 
-const schemas = {productSchemaJoi}
+const schemasProduct = {productSchemaJoi}
 
 
 const Product = model("product", productSchema, "diary" );
 
-module.exports = { Product, schemas };
+module.exports = { Product, schemasProduct };
 
