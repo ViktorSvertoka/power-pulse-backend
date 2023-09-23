@@ -1,7 +1,7 @@
 {
 	"openapi": "3.1.0",
 	"info": {
-		"version": "1.0.0",
+		"version": "1.0.2",
 		"title": "Power-pulse",
 		"description": "Showing off swagger-ui-express",
 		"license": {
@@ -20,6 +20,10 @@
 	  {
 		"name": "Exercises",
 		"description": "Exercises endpoints"
+	 },
+	 {
+		"name": "Diary",
+		"description": "Diary endpoints"
 	 }
 	],
 	"paths": {
@@ -219,7 +223,7 @@
 		"/api/auth/verify": {
 			"post": {
 				"tags": ["Auth"],
-				"summary": "Verify email",
+				"summary": "Verify email (send virification email)",
 				"paramrters": [],
 				"requestBody": {
 					"description": "Verification email object",
@@ -266,12 +270,18 @@
 				}
 			}
 		},
-		"/api/auth/verify/:verificationToken": {
+		"/api/auth/verify/{:verificationToken}": {
 			"get": {
 				"tags": ["Auth"],
-				"summary": "Verify email",
+				"summary": "Verify email with a verification token",
 				"parameters": [
-					{"in": "qery", "name": "verificationToken"}
+					{
+						"in": "path",
+						"name": ":verificationToken",
+						"required": true,
+						"type": "string",
+						"description":	"Verification token"
+					}
 				],
 				"requestBody": {},
 				"responses": {
@@ -293,6 +303,161 @@
 								  "$ref": "#/components/schemas/ErrorResponse"
 								}
 							 }
+						}
+					}
+				}
+			}
+		},
+		"/exercises": {
+			"get": {
+				"tags": ["Exercises"],
+				"summary": "Get all exercises",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/ExercisesResponse"
+							 }
+						  }
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/exercises/bodyparts": {
+			"get": {
+				"tags": ["Exercises"],
+				"summary": "Get all body parts",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/ExercisesBodyPartsResponse"
+							 }
+						  }
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/exercises/muscules": {
+			"get": {
+				"tags": ["Exercises"],
+				"summary": "Get all muscules",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/ExercisesMusclesResponse"
+							 }
+						  }
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/exercises/equipments": {
+			"get": {
+				"tags": ["Exercises"],
+				"summary": "Get all equipments",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/ExercisesEquipmentsResponse"
+							 }
+						  }
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/diary/addproduct": {
+			"post": {
+				"tags": ["Diary"],
+				"summary": "Add products",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Add product by id",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DiaryAddProductsRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryAddProductsResponse"
+							 }
+						  }
 						}
 					}
 				}
@@ -369,6 +534,16 @@
 						"type": "string",
 						"description": "User email",
 						"format": "email"
+					}
+				}
+			},
+			"DiaryAddProductsRequest": {
+				"type": "object",
+				"required": ["_id"],
+				"properties": {
+					"_id": {
+						"type": "string",
+						"description": "Add product id"
 					}
 				}
 			},
@@ -464,6 +639,122 @@
 					"message": {
 						"type": "string",
 						"descroption": "Message"
+					}
+				}
+			},
+			"ExercisesResponse": {
+				"type": "array",
+				"description": "Array with objects ",
+				"items": {
+					"type": "object",
+					"properties": {
+						"_id": {
+							"type": "string",
+							"description": "Exercise id"
+						},
+						"bodyPart": {
+							"type": "string",
+							"description": "Affected body part"
+						},
+						"equipment": {
+							"type": "string",
+							"description": "Necessary equipment"
+						},
+						"gifUrl": {
+							"type": "string",
+							"description": "URL to the example gif"
+						},
+						"name": {
+							"type": "string",
+							"description": "Exercise name"
+						},
+						"target": {
+							"type": "string",
+							"description": "Aim of exercise"
+						},
+						"burnedCalories": {
+							"type": "number",
+							"description": "Burns calories"
+						},
+						"time": {
+							"type": "number",
+							"description": "Time of the exercise"
+						}
+					}
+				}				
+			},
+			"ExercisesBodyPartsResponse": {
+				"type": "array",
+				"description": "Array with objects ",
+				"items": {
+					"type": "object",
+					"properties": {
+						"_id": {
+							"type": "string",
+							"description": "Body part id"
+						},
+						"filter": {
+							"type": "string",
+							"description": "Filter by body parts"
+						},
+						"name": {
+							"type": "string",
+							"description": "Body part name"
+						},
+						"imgURL": {
+							"type": "string",
+							"description": "Image URL"
+						}
+					}
+				}	
+			},
+			"ExercisesMusclesResponse": {
+				"type": "array",
+				"description": "Array with objects ",
+				"items": {
+					"type": "object",
+					"properties": {
+						"_id": {
+							"type": "string",
+							"description": "Muscle id"
+						},
+						"filter": {
+							"type": "string",
+							"description": "Filter by muscles"
+						},
+						"name": {
+							"type": "string",
+							"description": "Muscle name"
+						},
+						"imgURL": {
+							"type": "string",
+							"description": "Image URL"
+						}
+					}
+				}
+			},
+			"ExercisesEquipmentsResponse": {
+				"type": "array",
+				"description": "Array with objects ",
+				"items": {
+					"type": "object",
+					"properties": {
+						"_id": {
+							"type": "string",
+							"description": "MuscleEquipment id"
+						},
+						"filter": {
+							"type": "string",
+							"description": "Filter by equipment"
+						},
+						"name": {
+							"type": "string",
+							"description": "Equipment name"
+						},
+						"imgURL": {
+							"type": "string",
+							"description": "Image URL"
+						}
 					}
 				}
 			},
