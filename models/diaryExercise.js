@@ -4,7 +4,8 @@ const Joi = require('joi');
 const diaryExerciseSchema = new Schema(
   {
     exerciseId: {
-      type: Schema.Types.ObjectId,
+      type: String,
+      ref: "exercise",
       required: true,
     },
     date: {
@@ -31,7 +32,7 @@ const diaryExerciseSchema = new Schema(
   { versionKey: false, }
 );
 
-const diaryExercisesShemaJoi = Joi.object({
+const diaryExerciseSсhemaJoi = Joi.object({
   exerciseId: Joi.string().required(),
   date: Joi.string().regex(/^\d{2}\/\d{2}\/\d{4}$/i).required(),
   time: Joi.number().min(1).required(),
@@ -40,7 +41,7 @@ const diaryExercisesShemaJoi = Joi.object({
 });
 
 const schemas = {
-  diaryExercisesShemaJoi,
+  diaryExerciseSсhemaJoi
 };
 
 const diaryExercise = model('diaryExercise', diaryExerciseSchema, 'diary');
