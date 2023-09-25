@@ -162,21 +162,11 @@ const updateAvatar = async (req, res) => {
 };
 
 const addUserData = async (req, res) => {
-  // const { _id: owner } = req.user;
-
-  // const userData = {
-  //   ...req.body,
-  // };
-
   try {
     const { email } = req.user;
-    const updatedData = await User.findOneAndUpdate(
-      { email },
-      req.body,
-      // { owner: owner },
-      // {userData},
-      { new: true }
-    );
+    const updatedData = await User.findOneAndUpdate({ email }, req.body, {
+      new: true,
+    });
     console.log(updatedData);
 
     if (updatedData) {
@@ -190,6 +180,19 @@ const addUserData = async (req, res) => {
   }
 };
 
+const getUserParams = async (req, res, next) => {
+  try {
+    const { email } = req.user;
+    const result = await User.findOne({ email });
+    if (!result) {
+      HttpError(404, 'Not found');
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
@@ -200,4 +203,5 @@ module.exports = {
   verifyEmail: ctrlWrapper(verifyEmail),
   repeatEmailVerify: ctrlWrapper(repeatEmailVerify),
   addUserData: ctrlWrapper(addUserData),
+  getUserParams: ctrlWrapper(getUserParams),
 };

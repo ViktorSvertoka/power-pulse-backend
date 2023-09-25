@@ -35,6 +35,8 @@ router.get('/current', authenticate, ctrl.current);
 router.post('/logout', authenticate, ctrl.logout);
 router.patch('/', authenticate, ctrl.addUserData);
 
+router.get('/getuser', authenticate, ctrl.getUserParams);
+
 router.patch(
   '/avatars',
   authenticate,
