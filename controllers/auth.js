@@ -28,29 +28,32 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  const verificationToken = nanoid();
+  // const verificationToken = nanoid();
 
-  const verifyEmail = {
-    to: email,
-    subject: 'Verify your email',
-    html: generateVerifyMessage(verificationToken),
-  };
+  // const verifyEmail = {
+  //   to: email,
+  //   subject: 'Verify your email',
+  //   html: generateVerifyMessage(verificationToken),
+  // };
 
-  await sendEmail(verifyEmail);
+  // await sendEmail(verifyEmail);
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
-    verificationToken,
+    // verificationToken,
   });
+
+  const payload = { id: newUser._id };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
 
   res.status(201).json({
     user: {
       name: newUser.name,
       email: newUser.email,
     },
-    message: `Verify link was send to ${newUser.email}, token you can get after login`,
+    token: token, // Додаємо токен у відповідь
   });
 };
 
@@ -104,9 +107,9 @@ const login = async (req, res) => {
     throw HttpError(401, 'Email or password is wrong');
   }
 
-  if (!user.verify) {
-    throw HttpError(401, 'Email not verified');
-  }
+  // if (!user.verify) {
+  //   throw HttpError(401, 'Email not verified');
+  // }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -158,6 +161,35 @@ const updateAvatar = async (req, res) => {
   res.status(200).json({ avatarURL });
 };
 
+const addUserData = async (req, res) => {
+  // const { _id: owner } = req.user;
+
+  // const userData = {
+  //   ...req.body,
+  // };
+
+  try {
+    const { email } = req.user;
+    const updatedData = await User.findOneAndUpdate(
+      { email },
+      req.body,
+      // { owner: owner },
+      // {userData},
+      { new: true }
+    );
+    console.log(updatedData);
+
+    if (updatedData) {
+      res.status(200).json(updatedData);
+    } else {
+      res.status(404).json({ message: 'Користувача не знайдено' });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
@@ -167,4 +199,5 @@ module.exports = {
 
   verifyEmail: ctrlWrapper(verifyEmail),
   repeatEmailVerify: ctrlWrapper(repeatEmailVerify),
+  addUserData: ctrlWrapper(addUserData),
 };

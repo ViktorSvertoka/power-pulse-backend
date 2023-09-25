@@ -27,6 +27,49 @@ const userSchema = new Schema(
       required: [true, 'Password is required'],
     },
 
+    height: {
+      type: Number,
+      default: 160,
+    },
+    currentWeigth: {
+      type: Number,
+      default: 60,
+    },
+    desiredWeight: {
+      type: Number,
+      default: 160,
+    },
+    birthday: {
+      type: Date,
+
+      validate: {
+        validator: function (birthday) {
+          const age = (new Date() - birthday) / (1000 * 60 * 60 * 24 * 365.25);
+          return age >= 18;
+        },
+        message: 'Користувач повинен бути старше 18 років.',
+      },
+      default: '1987-01-08',
+    },
+    blood: {
+      type: Number,
+
+      enum: [1, 2, 3, 4],
+      default: 1,
+    },
+    sex: {
+      type: String,
+
+      enum: ['male', 'female'],
+      default: 'male',
+    },
+    levelActivity: {
+      type: Number,
+
+      enum: [1, 2, 3, 4, 5],
+      default: 1,
+    },
+
     token: {
       type: String,
       default: '',
@@ -37,21 +80,19 @@ const userSchema = new Schema(
       required: true,
     },
 
-    verify: {
-      type: Boolean,
-      default: false,
-    },
+    // verify: {
+    //   type: Boolean,
+    //   default: false,
+    // },
 
-    verificationToken: {
-      type: String,
-      required: [true, 'Verify token is required'],
-    },
+    // verificationToken: {
+    //   type: String,
+    //   required: [true, 'Verify token is required'],
+    // },
 
     avatarPublicId: {
       type: String,
     },
-    
-    
   },
   { versionKey: false, timestamps: true }
 );
