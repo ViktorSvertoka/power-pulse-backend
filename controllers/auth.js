@@ -158,6 +158,35 @@ const updateAvatar = async (req, res) => {
   res.status(200).json({ avatarURL });
 };
 
+const addUserData = async (req, res) => {
+  // const { _id: owner } = req.user;
+
+  // const userData = {
+  //   ...req.body,
+  // };
+
+  try {
+    const { email } = req.user;
+    const updatedData = await User.findOneAndUpdate(
+      { email },
+      req.body,
+      // { owner: owner },
+      // {userData},
+      { new: true }
+    );
+    console.log(updatedData);
+
+    if (updatedData) {
+      res.status(200).json(updatedData);
+    } else {
+      res.status(404).json({ message: 'Користувача не знайдено' });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
@@ -167,4 +196,5 @@ module.exports = {
 
   verifyEmail: ctrlWrapper(verifyEmail),
   repeatEmailVerify: ctrlWrapper(repeatEmailVerify),
+  addUserData: ctrlWrapper(addUserData),
 };
