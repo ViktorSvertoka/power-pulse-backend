@@ -41,7 +41,17 @@ const addProduct = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const { _id: owner } = req.user;
-  const products = await Product.find({ owner, productId: { $exists: true } });
+  const { page = 1, limit = 10, date } = req.query;
+  const skip = (page - 1) * limit;
+  const filter = { date, owner };
+
+  const products = await Product.find(filter).skip(skip).limit(limit);
+
+  console.log(products);
+
+  if (!products) {
+    throw HttpError(204, 'There are no entries in the diary for this date');
+  }
   res.json(products);
 };
 
