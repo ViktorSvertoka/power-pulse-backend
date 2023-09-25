@@ -40,3 +40,7 @@ write what we did (changed) etc.
 <!-- docker start + id -->
 
 yarn add @sendgrid/mail
+
+### Swagger
+
+https://power-pulse-back-end.onrender.com/api-docs/
