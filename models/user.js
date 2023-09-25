@@ -50,6 +50,8 @@ const userSchema = new Schema(
     avatarPublicId: {
       type: String,
     },
+    
+    
   },
   { versionKey: false, timestamps: true }
 );
