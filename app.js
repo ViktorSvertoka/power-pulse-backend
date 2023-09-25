@@ -8,9 +8,9 @@ require('dotenv').config();
 
 const authRouter = require('./routes/api/auth');
 const exercisesRouter = require('./routes/api/exercises');
-const diaryRouter  = require('./routes/api/diary');
+const diaryRouter = require('./routes/api/diary');
 const productsRouter = require('./routes/api/products');
-const usersRouter = require("./routes/api/userData");
+const usersRouter = require('./routes/api/userData');
 const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
@@ -25,8 +25,7 @@ app.use('/api/auth', authRouter);
 app.use('/exercises', exercisesRouter);
 app.use('/diary', diaryRouter);
 app.use('/products', productsRouter);
-app.use('/products', productsRouter);
-app.use("/users", usersRouter);
+app.use('/users', usersRouter);
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
 });
