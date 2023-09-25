@@ -28,29 +28,32 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  const verificationToken = nanoid();
+  // const verificationToken = nanoid();
 
-  const verifyEmail = {
-    to: email,
-    subject: 'Verify your email',
-    html: generateVerifyMessage(verificationToken),
-  };
+  // const verifyEmail = {
+  //   to: email,
+  //   subject: 'Verify your email',
+  //   html: generateVerifyMessage(verificationToken),
+  // };
 
-  await sendEmail(verifyEmail);
+  // await sendEmail(verifyEmail);
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
-    verificationToken,
+    // verificationToken,
   });
+
+  const payload = { id: newUser._id };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
 
   res.status(201).json({
     user: {
       name: newUser.name,
       email: newUser.email,
     },
-    message: `Verify link was send to ${newUser.email}, token you can get after login`,
+    token: token, // Додаємо токен у відповідь
   });
 };
 
@@ -104,9 +107,9 @@ const login = async (req, res) => {
     throw HttpError(401, 'Email or password is wrong');
   }
 
-  if (!user.verify) {
-    throw HttpError(401, 'Email not verified');
-  }
+  // if (!user.verify) {
+  //   throw HttpError(401, 'Email not verified');
+  // }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
