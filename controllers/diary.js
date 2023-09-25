@@ -2,6 +2,7 @@ const { Product } = require('../models/diaryProduct');
 const { diaryExercise } = require('../models/diaryExercise');
 
 const { ctrlWrapper, HttpError } = require('../helpers');
+const { delProduct, schemasDelProduct } = require('../models/diaryDelProduct');
 
 const addProduct = async (req, res) => {
   const { _id: owner } = req.user;
@@ -56,18 +57,27 @@ const getProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  const data = req.body;
-  const { _id: owner } = req.user;
+  const { productId } = req.params;
+  // const validationResult = schemasDelProduct.delProductSchemaJoi.validate({
+  //   date,
+  //   productId,
+  // });
 
-  const existingProduct = await Product.findOne({
-    data,
-    owner,
-    productId: { $exists: true },
-  });
-  if (!existingProduct) {
+  // if (validationResult.error) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: validationResult.error.details[0].message });
+  // }
+  // if (!date || !productId) {
+  //   throw HttpError(400, 'Missing required fields');
+  // }
+  // const filter = { date, owner };
+
+  const product = await delProduct.findByIdAndDelete(productId);
+  if (!product) {
+    console.log("product doesn't exist");
     throw HttpError(404, 'Not found');
   }
-  await Product.findByIdAndDelete(existingProduct._id);
   res.status(200).json({ message: 'Product deleted' });
 };
 
