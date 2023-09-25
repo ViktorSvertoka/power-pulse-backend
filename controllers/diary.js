@@ -5,8 +5,38 @@ const { ctrlWrapper, HttpError } = require('../helpers');
 
 const addProduct = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Product.create({ ...req.body, owner });
-  res.status(201).json(result);
+  const { date, productId, calories, category, recommended, title, amount } =
+    req.body;
+
+  const updateData = {
+    $set: {
+      calories,
+      category,
+      recommended,
+      title,
+      amount,
+    },
+  };
+
+  try {
+    const result = await Product.findOneAndUpdate(
+      { date, productId, owner },
+      updateData,
+      { new: true, upsert: true }
+    );
+    console.log('result', result);
+
+    if (!result) {
+      const newDiaryProduct = await Product.create({ ...req.body, owner });
+      console.log('!result', newDiaryProduct);
+
+      res.status(201).json(newDiaryProduct);
+    } else {
+      res.status(200).json(result);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 const getProduct = async (req, res) => {
