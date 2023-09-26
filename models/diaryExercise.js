@@ -44,7 +44,7 @@ const schemas = {
   diaryExerciseSсhemaJoi
 };
 
-const diaryExercise = model('diaryExercise', diaryExerciseSchema, 'diary');
+const diaryExercise = model('exercises', diaryExerciseSchema, 'diarys');
 
 module.exports = {
   diaryExercise,

@@ -1,7 +1,7 @@
 {
 	"openapi": "3.1.0",
 	"info": {
-		"version": "1.0.2",
+		"version": "1.0.4",
 		"title": "Power-pulse",
 		"description": "Showing off swagger-ui-express",
 		"license": {
@@ -457,11 +457,103 @@
 							 "schema": {
 								"$ref": "#/components/schemas/DiaryAddProductsResponse"
 							 }
-						  }
+						   }
+						}
+					},
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryAddProductsResponse"
+							 }
+						   }
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
 						}
 					}
 				}
 			}
+		},
+		"/diary/deleteproduct": {
+			"delete": {
+				"tags": ["Diary"],
+				"summary": "Delete products",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Delete product by id",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DiaryDeleteProductsRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryDeleteProductsResponse"
+							 }
+						   }
+						}
+					},
+					"404":{
+						"description": "Not found",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/ErrorResponse"
+							 }
+						   }
+						}
+					}
+				}
+			}
+		},
+		"/diary/addexercise": {
+			"post": {
+				"tags": ["Diary"],
+				"summary": "Add exercise",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"requestBody": {
+					"description": "Add product by id",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DiaryAddExerciseRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryAddExerciseResponse"
+							 }
+						   }
+						}
+					}
+				}
+			}	
 		}
 	},
 	"components": {
@@ -539,12 +631,76 @@
 			},
 			"DiaryAddProductsRequest": {
 				"type": "object",
-				"required": ["_id"],
+				"required": ["productId", "date", "calories", "category", "recommended", "title", "amount"],
 				"properties": {
-					"_id": {
+					"productId": {
 						"type": "string",
-						"description": "Add product id"
+						"description": "Product id"
+					},
+					"date": {
+						"type": "string",
+						"description": "Date added product",
+						"example": "DD/MM/YYYY"
+					},
+					"calories": {
+						"type": "number",
+						"description": "Number of calories"
+					},
+					"category": {
+						"type": "string",
+						"description": "Product category"
+					},
+					"recommended": {
+						"type": "boolean",
+						"description": "Кecommended product (true/false)"
+					},
+					"title": {
+						"type": "string",
+						"description": "Product title"
+					},
+					"amount": {
+						"type": "number",
+						"description": "Number of grams",
+						"example": "100"						
+					}							
+				}
+			},
+			"DiaryDeleteProductsRequest": {
+				"type": "object",
+				"required": ["productId", "date"],
+				"properties": {
+					"productId": {
+						"type": "string",
+						"description": "Product id",
+						"ref": "product"
+					},
+					"date": {
+						"type": "string",
+						"example": "DD/MM/YYYY"
 					}
+				}
+			},
+			"DiaryAddExerciseRequest": {
+				"type": "object",
+				"required": ["exerciseId", "date", "time", "calories"],
+				"properties": {
+					"exerciseId": {
+						"type": "string",
+						"description": "Exercise id"
+					},
+					"date": {
+						"type": "string",
+						"description": "Date added product",
+						"example": "DD/MM/YYYY"
+					},
+					"time": {
+						"type": "number",
+						"description": "Number of calories"
+					},
+					"calories": {
+						"type": "number",
+						"description": "Exercise time"
+					}						
 				}
 			},
 			"RegistrationResponse": {
@@ -755,6 +911,71 @@
 							"type": "string",
 							"description": "Image URL"
 						}
+					}
+				}
+			},
+			"DiaryAddProductsResponse": {
+				"type": "object",
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "Add date",
+						"example": "dd/mm/yyyy"
+					},
+					"owner": {
+						"type": "string",
+						"description": "Owner"
+					},
+					"productId": {
+						"type": "string",
+						"description": "Product id"
+					},
+					"calories": {
+						"type": "number",
+						"description": "Calories"
+					},
+					"category": {
+						"type": "string",
+						"description": "Food category"
+					},
+					"recommended": {
+						"type": "boolean",
+						"description": "Recommended product"
+					}				
+				}
+			},
+			"DiaryDeleteProductsResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"descroption": "Message"
+					}
+				}
+			},
+			"DiaryAddExerciseResponse": {
+				"type": "object",
+				"properties": {
+					"exerciseId": {
+						"type": "string",
+						"description": " Exercise id"
+					},
+					"date": {
+						"type": "string",
+						"description": "Date added exercise",
+						"example": "DD/MM/YYYY"
+					},
+					"time": {
+						"type": "number",
+						"description": "Exercise time"
+					},
+					"calories": {
+						"type": "number",
+						"description": "calories burned"
+					},
+					"owner": {
+						"type": "string",
+						"description": "Owner"
 					}
 				}
 			},
