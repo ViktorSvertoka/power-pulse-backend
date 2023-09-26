@@ -5,9 +5,16 @@ const { ctrlWrapper, HttpError } = require('../helpers');
 const { delProduct, schemasDelProduct } = require('../models/diaryDelProduct');
 
 const addProduct = async (req, res) => {
-  const { _id: owner } = req.user;
-  const { date, productId, calories, category, recommended, title, amount } =
-    req.body;
+  const {
+    date,
+    productId,
+    calories,
+    category,
+    recommended,
+    title,
+    amount,
+    weight,
+  } = req.body;
 
   const updateData = {
     $set: {
@@ -16,19 +23,20 @@ const addProduct = async (req, res) => {
       recommended,
       title,
       amount,
+      weight,
     },
   };
 
   try {
     const result = await Product.findOneAndUpdate(
-      { date, productId, owner },
+      { date, productId },
       updateData,
-      { new: true, upsert: true }
+      { new: true }
     );
     console.log('result', result);
 
     if (!result) {
-      const newDiaryProduct = await Product.create({ ...req.body, owner });
+      const newDiaryProduct = await Product.create({ ...req.body });
       console.log('!result', newDiaryProduct);
 
       res.status(201).json(newDiaryProduct);
@@ -41,10 +49,12 @@ const addProduct = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-  const { _id: owner } = req.user;
+  const { _id: id } = req.user;
   const { page = 1, limit = 10, date } = req.query;
   const skip = (page - 1) * limit;
+  const { owner } = id;
   const filter = { date, owner };
+  console.log('filter', filter);
 
   const products = await Product.find(filter).skip(skip).limit(limit);
 
@@ -58,25 +68,28 @@ const getProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   console.log('Hello from deleteProduct');
-  const { productId } = req.query;
-  console.log('productId', productId);
-  const validationResult = schemasDelProduct.delProductSchemaJoi.validate({
-    productId,
-  });
 
-  if (validationResult.error) {
-    return res
-      .status(400)
-      .json({ error: validationResult.error.details[0].message });
-  }
-  if (!productId) {
+  const { productId, date } = req.query;
+  console.log('productId', productId);
+  console.log('date', date);
+  // const validationResult = schemasDelProduct.delProductSchemaJoi.validate({
+  //   productId,
+  // });
+
+  // if (validationResult.error) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: validationResult.error.details[0].message });
+  // }
+  if (!productId || !date) {
     throw HttpError(400, 'Missing required fields');
   }
+  const filter = { productId, date };
 
-  const product = await delProduct.findByIdAndDelete(productId);
+  const product = await delProduct.findOneAndDelete(filter);
   if (!product) {
     console.log("product doesn't exist");
-    throw HttpError(404, 'Not found');
+    throw HttpError(404, 'Not found :-(');
   }
   res.status(200).json({ message: 'Product deleted' });
 };
