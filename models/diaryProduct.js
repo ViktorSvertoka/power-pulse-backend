@@ -5,6 +5,7 @@ const productSchema = new Schema(
   {
     productId: {
       type: String,
+      ref: 'product',
       required: true,
     },
     owner: {
@@ -60,7 +61,11 @@ const productSchemaJoi = Joi.object({
   weight: Joi.number().min(1).required(),
 });
 
-const schemasProduct = { productSchemaJoi };
+const delProductSchemaJoi = Joi.object({
+  productId: Joi.string().required(),
+});
+
+const schemasProduct = { productSchemaJoi, delProductSchemaJoi };
 
 const Product = model('product', productSchema, 'diarys');
 

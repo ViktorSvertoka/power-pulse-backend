@@ -1,50 +1,49 @@
-const { Product } = require('../models/diaryProduct');
+const { Product, schemasProduct } = require('../models/diaryProduct');
 const { diaryExercise } = require('../models/diaryExercise');
 
 const { ctrlWrapper, HttpError } = require('../helpers');
-const { delProduct, schemasDelProduct } = require('../models/diaryDelProduct');
 
 const addProduct = async (req, res) => {
-	const {
-	  date,
-	  productId,
-	  calories,
-	  category,
-	  recommended,
-	  title,
-	  amount,
-	  weight,
-	} = req.body;
- 
-	const updateData = {
-	  $set: {
-		 calories,
-		 category,
-		 recommended,
-		 title,
-		 amount,
-		 weight,
-	  },
-	};
- 
-	try {
-	  const result = await Product.findOneAndUpdate(
-		 { date, productId },
-		 updateData,
-		 { new: true }
-	  );
-	  if (!result) {
-		 const newDiaryProduct = await Product.create({ ...req.body });
-		 console.log('!result', newDiaryProduct);
- 
-		 res.status(201).json(newDiaryProduct);
-	  } else {
-		 res.status(200).json(result);
-	  }
-	} catch (error) {
-	  res.status(500).json({ error: error.message });
-	}
- };
+  const {
+    date,
+    productId,
+    calories,
+    category,
+    recommended,
+    title,
+    amount,
+    weight,
+  } = req.body;
+
+  const updateData = {
+    $set: {
+      calories,
+      category,
+      recommended,
+      title,
+      amount,
+      weight,
+    },
+  };
+
+  try {
+    const result = await Product.findOneAndUpdate(
+      { date, productId },
+      updateData,
+      { new: true }
+    );
+    if (!result) {
+      const newDiaryProduct = await Product.create({ ...req.body });
+      console.log('!result', newDiaryProduct);
+
+      res.status(201).json(newDiaryProduct);
+    } else {
+      res.status(200).json(result);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 const getProduct = async (req, res) => {
   const { _id: id } = req.user;
@@ -64,16 +63,20 @@ const getProduct = async (req, res) => {
   res.json(products);
 };
 
-const deleteProduct = async (req, res) => {  
-	const { productId, date} = req.body;
-	const { _id: owner } = req.user;
-	const product = await delProduct.findOneAndDelete({"productId": productId, "date": date, "owner": owner});
-	if (!product) {
-	  console.log("product doesn't exist");
-	  throw HttpError(404, 'Not found :-(');
-	}
-	res.status(200).json({ message: 'Product deleted' });
- };
+const deleteProduct = async (req, res) => {
+  const { productId, date } = req.body;
+  const { _id: owner } = req.user;
+  const product = await schemasProduct.delProductSchemaJoi.findOneAndDelete({
+    productId: productId,
+    date: date,
+    owner: owner,
+  });
+  if (!product) {
+    console.log("product doesn't exist");
+    throw HttpError(404, 'Not found :-(');
+  }
+  res.status(200).json({ message: 'Product deleted' });
+};
 
 const addExercise = async (req, res) => {
   const { _id: owner } = req.user;

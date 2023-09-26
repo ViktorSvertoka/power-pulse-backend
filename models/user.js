@@ -29,15 +29,15 @@ const userSchema = new Schema(
 
     height: {
       type: Number,
-      default: 160,
+      required: true,
     },
     currentWeigth: {
       type: Number,
-      default: 60,
+      required: true,
     },
     desiredWeight: {
       type: Number,
-      default: 160,
+      required: true,
     },
     birthday: {
       type: Date,
@@ -49,13 +49,13 @@ const userSchema = new Schema(
         },
         message: 'Користувач повинен бути старше 18 років.',
       },
-      default: '1987-01-08',
+      required: true,
     },
     blood: {
       type: Number,
 
       enum: [1, 2, 3, 4],
-      default: 1,
+      required: true,
     },
     sex: {
       type: String,
@@ -67,31 +67,21 @@ const userSchema = new Schema(
       type: Number,
 
       enum: [1, 2, 3, 4, 5],
-      default: 1,
+      required: true,
     },
 
     token: {
       type: String,
-      default: '',
+      required: true,
     },
     bmr: {
-    type: Number
+      type: Number,
     },
-    
+
     avatarURL: {
       type: String,
       required: true,
     },
-
-    // verify: {
-    //   type: Boolean,
-    //   default: false,
-    // },
-
-    // verificationToken: {
-    //   type: String,
-    //   required: [true, 'Verify token is required'],
-    // },
 
     avatarPublicId: {
       type: String,

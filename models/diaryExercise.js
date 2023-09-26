@@ -5,7 +5,7 @@ const diaryExerciseSchema = new Schema(
   {
     exerciseId: {
       type: String,
-      ref: "exercise",
+      ref: 'exercise',
       required: true,
     },
     date: {
@@ -29,19 +29,23 @@ const diaryExerciseSchema = new Schema(
       required: true,
     },
   },
-  { versionKey: false, }
+  { versionKey: false }
 );
 
-const diaryExerciseSсhemaJoi = Joi.object({
+const diaryExerciseSchemaJoi = Joi.object({
   exerciseId: Joi.string().required(),
-  date: Joi.string().regex(/^\d{2}\/\d{2}\/\d{4}$/i).required(),
+  date: Joi.string()
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/i)
+    .required()
+    .messages({
+      'any.required': `Formate date is wrong`,
+    }),
   time: Joi.number().min(1).required(),
   calories: Joi.number().min(1).required(),
-  
 });
 
 const schemas = {
-  diaryExerciseSсhemaJoi
+  diaryExerciseSchemaJoi,
 };
 
 const diaryExercise = model('exercises', diaryExerciseSchema, 'diarys');

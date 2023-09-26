@@ -5,8 +5,6 @@ require('dotenv').config();
 
 const gravatar = require('gravatar');
 
-const { nanoid } = require('nanoid');
-
 const { User } = require('../models/user');
 
 const {
@@ -29,21 +27,11 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  // const verificationToken = nanoid();
-
-  // const verifyEmail = {
-  //   to: email,
-  //   subject: 'Verify your email',
-  //   html: generateVerifyMessage(verificationToken),
-  // };
-
-  // await sendEmail(verifyEmail);
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
-    // verificationToken,
   });
 
   const payload = { id: newUser._id };
@@ -54,7 +42,7 @@ const register = async (req, res) => {
       name: newUser.name,
       email: newUser.email,
     },
-    token: token, // Додаємо токен у відповідь
+    token: token,
   });
 };
 
@@ -108,10 +96,6 @@ const login = async (req, res) => {
     throw HttpError(401, 'Email or password is wrong');
   }
 
-  // if (!user.verify) {
-  //   throw HttpError(401, 'Email not verified');
-  // }
-
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
@@ -150,7 +134,7 @@ const logout = async (req, res) => {
   if (!result) {
     throw HttpError(404, 'Not found');
   }
-  res.status(204).json({ message: 'logout was successfull' });
+  res.status(204).json({ message: 'logout was successful' });
 };
 
 const updateAvatar = async (req, res) => {
@@ -186,11 +170,11 @@ const addUserData = async (req, res) => {
     if (updatedData) {
       res.status(201).json(updatedData);
     } else {
-      res.status(404).json({ message: 'Користувача не знайдено' });
+      res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Помилка сервера' });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
