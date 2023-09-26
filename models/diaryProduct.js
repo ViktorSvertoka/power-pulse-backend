@@ -7,10 +7,9 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    amount: {
-      type: Number,
-      required: true,
-      min: 1,
+    owner: {
+      type: Schema.Types.ObjectId,
+      required: false,
     },
     date: {
       type: String,
@@ -34,6 +33,16 @@ const productSchema = new Schema(
       required: true,
       min: 1,
     },
+    amount: {
+      type: String,
+      required: true,
+      min: 1,
+    },
+    weight: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -48,6 +57,7 @@ const productSchemaJoi = Joi.object({
   recommended: Joi.boolean().required(),
   title: Joi.string().required(),
   amount: Joi.number().min(1).required(),
+  weight: Joi.number().min(1).required(),
 });
 
 const schemasProduct = { productSchemaJoi };
