@@ -3,6 +3,7 @@ const HttpError = require('./HttpError');
 const handleMongooseError = require('./handleMongooseError');
 const sendEmail = require('./sendEmail');
 const generateVerifyMessage = require('./generateVerifyMessage');
+const calculateBMR = require('./calculateBMR');
 
 module.exports = {
   ctrlWrapper,
@@ -10,4 +11,5 @@ module.exports = {
   handleMongooseError,
   sendEmail,
   generateVerifyMessage,
+  calculateBMR,
 };

@@ -14,6 +14,7 @@ const {
   ctrlWrapper,
   HttpError,
   generateVerifyMessage,
+  calculateBMR,
 } = require('../helpers');
 
 const { SECRET_KEY } = process.env;
@@ -168,9 +169,22 @@ const addUserData = async (req, res) => {
       new: true,
     });
     console.log(updatedData);
+    const { desiredWeight, height, birthday, sex, levelActivity } = updatedData;
+
+    const bmr = calculateBMR(
+      desiredWeight,
+      height,
+      birthday,
+      sex,
+      levelActivity
+    );
+
+    updatedData.bmr = bmr;
+
+    await updatedData.save();
 
     if (updatedData) {
-      res.status(200).json(updatedData);
+      res.status(201).json(updatedData);
     } else {
       res.status(404).json({ message: 'Користувача не знайдено' });
     }
