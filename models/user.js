@@ -74,7 +74,10 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
-
+    bmr: {
+    type: Number
+    },
+    
     avatarURL: {
       type: String,
       required: true,
