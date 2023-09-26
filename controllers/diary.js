@@ -57,21 +57,21 @@ const getProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  const { productId } = req.params;
-  // const validationResult = schemasDelProduct.delProductSchemaJoi.validate({
-  //   date,
-  //   productId,
-  // });
+  console.log('Hello from deleteProduct');
+  const { productId } = req.query;
+  console.log('productId', productId);
+  const validationResult = schemasDelProduct.delProductSchemaJoi.validate({
+    productId,
+  });
 
-  // if (validationResult.error) {
-  //   return res
-  //     .status(400)
-  //     .json({ error: validationResult.error.details[0].message });
-  // }
-  // if (!date || !productId) {
-  //   throw HttpError(400, 'Missing required fields');
-  // }
-  // const filter = { date, owner };
+  if (validationResult.error) {
+    return res
+      .status(400)
+      .json({ error: validationResult.error.details[0].message });
+  }
+  if (!productId) {
+    throw HttpError(400, 'Missing required fields');
+  }
 
   const product = await delProduct.findByIdAndDelete(productId);
   if (!product) {

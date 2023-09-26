@@ -14,7 +14,7 @@ router.post(
   ctrl.addProduct
 );
 
-router.delete('/deleteproduct/:id', authenticate, ctrl.deleteProduct);
+router.delete('/deleteproduct', authenticate, ctrl.deleteProduct);
 
 router.post(
   '/addexercise',
