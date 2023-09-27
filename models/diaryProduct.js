@@ -28,7 +28,7 @@ const productSchema = new Schema(
     },
     recommended: {
       type: Boolean,
-      required: true,
+      default: true,
     },
     calories: {
       type: Number,
@@ -44,7 +44,7 @@ const productSchema = new Schema(
       type: Number,
       required: true,
       min: 1,
-    }
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -55,7 +55,8 @@ const productSchemaJoi = Joi.object({
   productId: Joi.string().required(),
   date: Joi.string()
     .regex(/^\d{2}\/\d{2}\/\d{4}$/i)
-    .required().messages({
+    .required()
+    .messages({
       'any.required': `Formate date is wrong`,
     }),
   calories: Joi.number().min(1).required(),
@@ -67,10 +68,11 @@ const productSchemaJoi = Joi.object({
 });
 
 const delProductSchemaJoi = Joi.object({
-  productId: Joi.string().required(),
-  date: Joi.string().regex(/^\d{2}\/\d{2}\/\d{4}$/i).required()
+  id: Joi.string().required(),
+  date: Joi.string()
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/i)
+    .required(),
 });
-
 
 const schemasProduct = { productSchemaJoi, delProductSchemaJoi };
 
