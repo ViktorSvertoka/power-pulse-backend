@@ -4,7 +4,7 @@ const { diaryExercise } = require('../models/diaryExercise');
 const { ctrlWrapper, HttpError } = require('../helpers');
 
 const addProduct = async (req, res) => {
-	const {_id: owner} = req.user;
+  const { _id: owner } = req.user;
   const {
     date,
     productId,
@@ -47,12 +47,9 @@ const addProduct = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-
-  const { _id: id } = req.user;
+  const { _id: owner } = req.user;
+  console.log('owner', owner);
   const { date } = req.query;
-
-  const { owner } = id;
-
 
   const filter = { date, owner };
   console.log('filter', filter);
@@ -70,7 +67,7 @@ const getProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const { productId, date } = req.body;
   const { _id: owner } = req.user;
-  console.log(productId, date, owner)
+  console.log(productId, date, owner);
   const product = await Product.findOneAndDelete({
     productId: productId,
     date: date,
