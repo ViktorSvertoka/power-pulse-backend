@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 const Joi = require('joi');
+const { handleMongooseError } = require('../helpers');
 
 const productSchema = new Schema(
   {
@@ -35,7 +36,7 @@ const productSchema = new Schema(
       min: 1,
     },
     amount: {
-      type: String,
+      type: Number,
       required: true,
       min: 1,
     },
@@ -43,16 +44,20 @@ const productSchema = new Schema(
       type: Number,
       required: true,
       min: 1,
-    },
+    }
   },
   { versionKey: false, timestamps: true }
 );
+
+productSchema.post('save', handleMongooseError);
 
 const productSchemaJoi = Joi.object({
   productId: Joi.string().required(),
   date: Joi.string()
     .regex(/^\d{2}\/\d{2}\/\d{4}$/i)
-    .required(),
+    .required().messages({
+      'any.required': `Formate date is wrong`,
+    }),
   calories: Joi.number().min(1).required(),
   category: Joi.string().required(),
   recommended: Joi.boolean().required(),
@@ -63,13 +68,12 @@ const productSchemaJoi = Joi.object({
 
 const delProductSchemaJoi = Joi.object({
   productId: Joi.string().required(),
-  date: Joi.string()
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/i)
-    .required(),
+  date: Joi.string().regex(/^\d{2}\/\d{2}\/\d{4}$/i).required()
 });
+
 
 const schemasProduct = { productSchemaJoi, delProductSchemaJoi };
 
-const Product = model('diaries', productSchema, 'diaries');
+const Product = model('diaryproduct', productSchema);
 
 module.exports = { Product, schemasProduct };

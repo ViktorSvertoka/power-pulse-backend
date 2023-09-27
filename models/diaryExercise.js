@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 const Joi = require('joi');
+const { handleMongooseError } = require('../helpers');
 
 const diaryExerciseSchema = new Schema(
   {
@@ -32,6 +33,8 @@ const diaryExerciseSchema = new Schema(
   { versionKey: false }
 );
 
+diaryExerciseSchema.post('save', handleMongooseError);
+
 const diaryExerciseSchemaJoi = Joi.object({
   exerciseId: Joi.string().required(),
   date: Joi.string()
@@ -45,10 +48,10 @@ const diaryExerciseSchemaJoi = Joi.object({
 });
 
 const schemas = {
-  diaryExerciseSchemaJoi,
+	diaryExerciseSchemaJoi,
 };
 
-const diaryExercise = model('exercises', diaryExerciseSchema, 'diary');
+const diaryExercise = model('diaryexercise', diaryExerciseSchema);
 
 module.exports = {
   diaryExercise,

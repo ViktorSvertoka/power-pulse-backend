@@ -13,76 +13,58 @@ const userSchema = new Schema(
       minLength: 3,
       required: [true, 'Name is required'],
     },
-
     email: {
       type: String,
       match: emailRegex,
       required: [true, 'Email is required'],
       unique: true,
     },
-
     password: {
       type: String,
       minLength: 6,
       required: [true, 'Password is required'],
     },
-
     height: {
-      type: Number,
-      required: true,
+      type: Number,     
     },
     currentWeigth: {
-      type: Number,
-      required: true,
+      type: Number,      
     },
     desiredWeight: {
-      type: Number,
-      required: true,
+      type: Number,      
     },
     birthday: {
       type: Date,
-
       validate: {
         validator: function (birthday) {
           const age = (new Date() - birthday) / (1000 * 60 * 60 * 24 * 365.25);
           return age >= 18;
         },
         message: 'Користувач повинен бути старше 18 років.',
-      },
-      required: true,
+      },      
     },
     blood: {
       type: Number,
-
-      enum: [1, 2, 3, 4],
-      required: true,
+      enum: [1, 2, 3, 4],      
     },
     sex: {
       type: String,
-
       enum: ['male', 'female'],
-      default: 'male',
     },
     levelActivity: {
       type: Number,
-
-      enum: [1, 2, 3, 4, 5],
-      required: true,
+      enum: [1, 2, 3, 4, 5],      
     },
-
     token: {
-      type: String,
-      required: true,
+      type: String,      
     },
     bmr: {
       type: Number,
     },
-
     avatarURL: {
       type: String,
       required: true,
     },
-
     avatarPublicId: {
       type: String,
     },
@@ -96,11 +78,9 @@ const registerSchema = Joi.object({
   name: Joi.string().min(3).required().messages({
     'any.required': `Missing required name field`,
   }),
-
   email: Joi.string().pattern(new RegExp(emailRegex)).required().messages({
     'any.required': `Missing required email field`,
   }),
-
   password: Joi.string().min(6).required().messages({
     'any.required': `Missing required password field`,
   }),
