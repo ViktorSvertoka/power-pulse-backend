@@ -12,7 +12,12 @@ router.post(
   ctrl.addProduct
 );
 
-router.delete('/deleteproduct', authenticate, ctrl.deleteProduct);
+router.delete(
+  '/deleteproduct',
+  authenticate,
+  validateBody(schemasProduct.delProductSchemaJoi),
+  ctrl.deleteProduct
+);
 
 router.post(
   '/addexercise',
