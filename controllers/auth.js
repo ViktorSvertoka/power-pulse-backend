@@ -1,11 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
 require('dotenv').config();
-
 const gravatar = require('gravatar');
-
 const { User } = require('../models/user');
+const nanoid = require('nanoid');
 
 const {
   sendEmail,
@@ -28,14 +26,15 @@ const register = async (req, res) => {
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
 
+  const payload = { id: nanoid };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
+
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    avatarURL,
+    avatarURL,	
+	 token
   });
-
-  const payload = { id: newUser._id };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
 
   res.status(201).json({
     user: {
