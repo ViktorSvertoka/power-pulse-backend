@@ -47,13 +47,13 @@ const addProduct = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const { _id: id } = req.user;
-  const { page = 1, limit = 10, date } = req.query;
-  const skip = (page - 1) * limit;
+  const { date } = req.query;
+
   const { owner } = id;
   const filter = { date, owner };
   console.log('filter', filter);
 
-  const products = await Product.find(filter).skip(skip).limit(limit);
+  const products = await Product.find(filter);
 
   console.log(products);
 

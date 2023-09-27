@@ -67,6 +67,6 @@ const delProductSchemaJoi = Joi.object({
 
 const schemasProduct = { productSchemaJoi, delProductSchemaJoi };
 
-const Product = model('product', productSchema, 'diarys');
+const Product = model('dairy', productSchema, 'diary');
 
 module.exports = { Product, schemasProduct };
