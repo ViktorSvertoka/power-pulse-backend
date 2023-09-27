@@ -43,7 +43,7 @@ const productSchema = new Schema(
       type: Number,
       required: true,
       min: 1,
-    },
+    }
   },
   { versionKey: false, timestamps: true }
 );
@@ -63,10 +63,13 @@ const productSchemaJoi = Joi.object({
 
 const delProductSchemaJoi = Joi.object({
   productId: Joi.string().required(),
+  date: Joi.string().regex(/^\d{2}\/\d{2}\/\d{4}$/i).required()
 });
 
 const schemasProduct = { productSchemaJoi, delProductSchemaJoi };
 
-const Product = model('dairy', productSchema, 'diary');
+
+const Product = model('diary', productSchema, 'diary');
+
 
 module.exports = { Product, schemasProduct };

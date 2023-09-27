@@ -4,6 +4,7 @@ const { diaryExercise } = require('../models/diaryExercise');
 const { ctrlWrapper, HttpError } = require('../helpers');
 
 const addProduct = async (req, res) => {
+	const {_id: owner} = req.user;
   const {
     date,
     productId,
@@ -28,12 +29,12 @@ const addProduct = async (req, res) => {
 
   try {
     const result = await Product.findOneAndUpdate(
-      { date, productId },
+      { date, productId, owner },
       updateData,
       { new: true }
     );
     if (!result) {
-      const newDiaryProduct = await Product.create({ ...req.body });
+      const newDiaryProduct = await Product.create({ ...req.body, owner });
       console.log('!result', newDiaryProduct);
 
       res.status(201).json(newDiaryProduct);
@@ -46,10 +47,13 @@ const addProduct = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
+
   const { _id: id } = req.user;
   const { date } = req.query;
 
   const { owner } = id;
+
+
   const filter = { date, owner };
   console.log('filter', filter);
 
@@ -66,7 +70,8 @@ const getProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const { productId, date } = req.body;
   const { _id: owner } = req.user;
-  const product = await schemasProduct.delProductSchemaJoi.findOneAndDelete({
+  console.log(productId, date, owner)
+  const product = await Product.findOneAndDelete({
     productId: productId,
     date: date,
     owner: owner,
