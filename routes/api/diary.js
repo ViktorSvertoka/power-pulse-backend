@@ -2,9 +2,7 @@ const express = require('express');
 const { schemasProduct } = require('../../models/diaryProduct');
 const { schemas } = require('../../models/diaryExercise');
 const router = express.Router();
-
 const { validateBody, authenticate } = require('../../middlewares');
-
 const ctrl = require('../../controllers/diary');
 
 router.post(
@@ -19,7 +17,7 @@ router.delete('/deleteproduct', authenticate, ctrl.deleteProduct);
 router.post(
   '/addexercise',
   authenticate,
-  validateBody(schemas.diaryExerciseSсhemaJoi),
+  validateBody(schemas.diaryExerciseSchemaJoi),
   ctrl.addExercise
 );
 

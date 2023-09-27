@@ -1,7 +1,7 @@
 {
 	"openapi": "3.1.0",
 	"info": {
-		"version": "1.0.4",
+		"version": "1.0.5",
 		"title": "Power-pulse",
 		"description": "Showing off swagger-ui-express",
 		"license": {
@@ -24,6 +24,10 @@
 	 {
 		"name": "Diary",
 		"description": "Diary endpoints"
+	 },
+	 {
+		"name": "Products",
+		"description": "Products endpoints"
 	 }
 	],
 	"paths": {
@@ -554,6 +558,35 @@
 					}
 				}
 			}	
+		},
+		"/diary/getproduct": {
+			"get": {
+				"tags": ["Diary"],
+				"summary": "Get added products",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "date",
+						"required": true,
+						"type": "string",
+						"description":	"Filter date"
+					}
+				],
+				"security": [{ "Bearer": [] }],
+				"requestBody":{},
+				"responses":{
+					"200": {
+						"description": "OK",
+						"content": {
+						  "application/json": {
+							 "schema": {
+								"$ref": "#/components/schemas/DiaryGetAddedProductsResponse"
+							 }
+						   }
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -576,6 +609,28 @@
 						"description": "User password",
 						"example": "qwe123"
 					}
+				}
+			},
+			"RegistrationResponse": {
+				"type": "object",
+				"properties": {
+					"user": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "User name"
+							},
+							"email": {
+								"type": "string",
+								"description": "User email"
+							}
+						}	
+					},
+					"message": {
+						"type": "string",
+						"descroption": "Message"
+					} 
 				}
 			},
 			"LoginRequest": {
@@ -703,28 +758,18 @@
 					}						
 				}
 			},
-			"RegistrationResponse": {
+			"DiaryGetProductsRequest": {
 				"type": "object",
+				"required": ["date"],
 				"properties": {
-					"user": {
-						"type": "object",
-						"properties": {
-							"name": {
-								"type": "string",
-								"description": "User name"
-							},
-							"email": {
-								"type": "string",
-								"description": "User email"
-							}
-						}	
-					},
-					"message": {
+					"date": {
 						"type": "string",
-						"descroption": "Message"
-					} 
+						"description": "Aded products date",
+						"example": "DD/MM/YYYY"
+					}					
 				}
 			},
+			
 			"LoginResponse": {
 				"type": "object",
 				"properties": {
@@ -978,6 +1023,31 @@
 						"description": "Owner"
 					}
 				}
+			},
+			"DiaryGetAddedProductsResponse": {
+				"type": "array",
+				"description": "Array with objects ",
+				"items": {
+					"type": "object",
+					"properties": {
+						"_id": {
+							"type": "string",
+							"description": "Body part id"
+						},
+						"filter": {
+							"type": "string",
+							"description": "Filter by body parts"
+						},
+						"name": {
+							"type": "string",
+							"description": "Body part name"
+						},
+						"imgURL": {
+							"type": "string",
+							"description": "Image URL"
+						}
+					}
+				}	
 			},
 			"ErrorResponse": {
 				"type": "object",

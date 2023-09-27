@@ -6,7 +6,7 @@ const getAllProducts = async (req, res) => {
   if (!result) {
     throw HttpError(404, 'Not found');
   }
-  res.json(result.slice(0, 500));
+  res.json(result);
 };
 
 module.exports = {
