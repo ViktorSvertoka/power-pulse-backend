@@ -25,13 +25,16 @@ const userSchema = new Schema(
       required: [true, 'Password is required'],
     },
     height: {
-      type: Number,     
+      type: Number,   
+		default: 150  
     },
     currentWeigth: {
-      type: Number,      
+      type: Number,
+		default: 60      
     },
     desiredWeight: {
-      type: Number,      
+      type: Number,
+		default: 60      
     },
     birthday: {
       type: Date,
@@ -42,24 +45,29 @@ const userSchema = new Schema(
         },
         message: 'Користувач повинен бути старше 18 років.',
       },      
+		default: 25/10/1995
     },
     blood: {
       type: Number,
-      enum: [1, 2, 3, 4],      
+      enum: [1, 2, 3, 4], 
+		default: 1       
     },
     sex: {
       type: String,
       enum: ['male', 'female'],
+		default: "male"
     },
     levelActivity: {
       type: Number,
-      enum: [1, 2, 3, 4, 5],      
+      enum: [1, 2, 3, 4, 5],
+		default: 1      
     },
     token: {
       type: String,      
     },
     bmr: {
       type: Number,
+		default: 2200  
     },
     avatarURL: {
       type: String,
