@@ -52,7 +52,10 @@ const getProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   const { id } = req.body;
+
+
   // const { _id: owner } = req.user;
+
   const product = await Product.findByIdAndDelete({
     _id: id,
   });
