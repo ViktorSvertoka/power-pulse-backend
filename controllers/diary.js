@@ -16,25 +16,28 @@ const addProduct = async (req, res) => {
   } = req.body;
 
   const oldResult = await Product.find({ date, productId, owner });
+  
   if (oldResult.length === 0) {
     const newDiaryProduct = await Product.create({ ...req.body, owner });
     res.status(201).json(newDiaryProduct);
   } else {
     const updateData = {
       $set: {
-        calories: calories + oldResult[0]['calories'],
+        calories: Number(calories) + Number(oldResult[0]['calories']),
         category,
         recommended,
         title,
-        amount: amount + oldResult[0]['amount'],
-        weight: weight + oldResult[0]['weight'],
+        amount: Number(amount) + Number(oldResult[0]['amount']),
+        weight: Number(weight) + Number(oldResult[0]['weight']),
       },
     };
+	 
     const result = await Product.findOneAndUpdate(
       { date, productId, owner },
       updateData,
       { new: true }
     );
+	 console.log(result)
     res.status(200).json(result);
   }
 };
