@@ -40,7 +40,7 @@ const userSchema = new Schema(
           const age = (new Date() - birthday) / (1000 * 60 * 60 * 24 * 365.25);
           return age >= 18;
         },
-        message: 'Користувач повинен бути старше 18 років.',
+        message: 'The user must be over 18 years old.',
       },      
 		default: 25/10/1995
     },
@@ -106,12 +106,35 @@ const emailSchema = Joi.object({
   }),
 });
 
-
+const addUserDataSchemaJoi = Joi.object({
+	height: Joi.number().min(35).required().messages({
+		'any.required': `Missing required height field`,
+	 }),
+	currentWeigth: Joi.number().min(35).required().messages({
+		'any.required': `Missing required currentWeigth field`,
+	 }),
+	 desiredWeight: Joi.number().min(35).required().messages({
+		'any.required': `Missing required desiredWeight field`,
+	 }),
+	birthday: Joi.date().required().messages({
+		'any.required': `Missing required birthday field`,
+	 }),
+	 blood: Joi.number().valid(1, 2, 3, 4).required().messages({
+		'any.required': `Missing required blood field`,
+	 }),
+	 sex: Joi.string().valid('male', 'female').messages({
+		'any.required': `Missing required sex field`,
+	 }),
+	 levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
+		'any.required': `Missing required levelActivity field`,
+	 }),
+})
 
 const schemas = {
   registerSchema,
   loginSchema,
   emailSchema,
+  addUserDataSchemaJoi
 };
 
 const User = model('user', userSchema);

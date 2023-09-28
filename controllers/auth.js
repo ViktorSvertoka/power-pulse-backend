@@ -24,17 +24,18 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email);
-
-  const payload = { id: nanoid };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
+  const avatarURL = gravatar.url(email); 
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,	
-	 token
   });
+
+  const payload = { id: newUser._id };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
+
+  await User.findByIdAndUpdate(newUser._id, { token });
 
   res.status(201).json({
     user: {
@@ -151,7 +152,7 @@ const addUserData = async (req, res) => {
     const updatedData = await User.findOneAndUpdate({ email }, req.body, {
       new: true,
     });
-    console.log(updatedData);
+
     const { desiredWeight, height, birthday, sex, levelActivity } = updatedData;
 
     const bmr = calculateBMR(
@@ -172,7 +173,6 @@ const addUserData = async (req, res) => {
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
