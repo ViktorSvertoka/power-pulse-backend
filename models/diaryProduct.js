@@ -72,8 +72,6 @@ const delProductSchemaJoi = Joi.object({
   id: Joi.string().required(),
   date: Joi.string()
 
-  id: Schema.Types.ObjectId,
-
 });
 
 const schemasProduct = { productSchemaJoi, delProductSchemaJoi };
