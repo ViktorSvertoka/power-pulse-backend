@@ -6,9 +6,7 @@ const Muscules = require('../models/muscules');
 const Equipments = require('../models/equipments');
 
 const getAllExercisesName = async (req, res) => {
-  const result = await ExerciseName.find({
-    name: 'assisted hanging knee raise with throw down',
-  });
+  const result = await ExerciseName.find();
   if (!result) {
     throw HttpError(404, 'Not found');
   }
