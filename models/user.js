@@ -122,7 +122,7 @@ const addUserDataSchemaJoi = Joi.object({
 	 blood: Joi.number().valid(1, 2, 3, 4).required().messages({
 		'any.required': `Missing required blood field`,
 	 }),
-	 sex: Joi.string().valid('male', 'female').messages({
+	 sex: Joi.string().lowercase().valid('male', 'female').messages({
 		'any.required': `Missing required sex field`,
 	 }),
 	 levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
