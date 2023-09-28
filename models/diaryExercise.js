@@ -7,43 +7,43 @@ const diaryExerciseSchema = new Schema(
    	exerciseId: {
       type: String,
       ref: 'exercise',
-      required: true,
+     
    	},
 		owner: {
       type: Schema.Types.ObjectId,
-      required: true,
+  
    	},
    	date: {
       type: String,
       format: 'dd/mm/YYYY',
-      required: true,
+   
    	},
    	time: {
       type: Number,
       min: 1,
-      required: true,
+  
    	},
    	burnedCalories: {
       type: Number,
       min: 1,
-      required: true,
+  
    	},
 		bodyPart: {
 		type: String,
-		required: true
+	
 		},
 		equipment: {
 		type: String,
-		required: true
+	
 		},
 		name: {
 		type: String,
-		required: true
+		
 		},
 		target: {
 		type: String,
-		required: true
-		}   
+		}
+	
   },
   { versionKey: false }
 );
@@ -51,33 +51,15 @@ const diaryExerciseSchema = new Schema(
 diaryExerciseSchema.post('save', handleMongooseError);
 
 const diaryAddExerciseSchemaJoi = Joi.object({
-  exerciseId: Joi.string().required().messages({
-	'any.required': `Fild exerciseId is required`,
- }),
+  exerciseId: Joi.string().required(),
   date: Joi.string()
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/i)
-    .required()
-    .messages({
-      'any.required': `Formate date is wrong`,
-    }),
-  time: Joi.number().min(1).required().messages({
-	'any.required': `Fild time is required`,
- }),
-  burnedCalories: Joi.number().min(1).required().messages({
-	'any.required': `Fild burnedCalories is required`,
- }),
-  bodyPart: Joi.string().required().messages({
-	'any.required': `Fild bodyPart is required`,
- }),
-  equipment: Joi.string().required().messages({
-	'any.required': `Fild equipment is required`,
- }),
-  name: Joi.string().required().messages({
-	'any.required': `Fild name is required`,
- }),
-  target: Joi.string().required().messages({
-	'any.required': `Fild target is required`,
- }),
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/i),
+  time: Joi.number().min(1).required(),
+  burnedCalories: Joi.number().min(1),
+  bodyPart: Joi.string(),
+  equipment: Joi.string(),
+  name: Joi.string(),
+  target: Joi.string(),
 });
 
 const diaryDelExerciseSchemaJoi = Joi.object({
