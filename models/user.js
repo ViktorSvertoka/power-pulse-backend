@@ -51,8 +51,8 @@ const userSchema = new Schema(
     },
     sex: {
       type: String,
-      enum: ['Male', 'Female'],
-		default: "Male"
+      enum: ['male', 'female'],
+		default: "male"
     },
     levelActivity: {
       type: Number,
