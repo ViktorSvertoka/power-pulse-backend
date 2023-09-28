@@ -51,7 +51,7 @@ const getProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  const { id } = req.query;
+  const { id } = req.body;
   const product = await Product.findByIdAndDelete({
     _id: id,
   });
