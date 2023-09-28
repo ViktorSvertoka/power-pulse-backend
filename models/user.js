@@ -25,7 +25,7 @@ const userSchema = new Schema(
       type: Number,   
 		default: 150  
     },
-    currentWeigth: {
+    currentWeight: {
       type: Number,
 		default: 60      
     },
@@ -106,35 +106,35 @@ const emailSchema = Joi.object({
   }),
 });
 
-// const addUserDataSchemaJoi = Joi.object({
-// 	height: Joi.number().min(35).required().messages({
-// 		'any.required': `Missing required height field`,
-// 	 }),
-// 	currentWeigth: Joi.number().min(35).required().messages({
-// 		'any.required': `Missing required currentWeigth field`,
-// 	 }),
-// 	 desiredWeight: Joi.number().min(35).required().messages({
-// 		'any.required': `Missing required desiredWeight field`,
-// 	 }),
-// 	birthday: Joi.date().required().messages({
-// 		'any.required': `Missing required birthday field`,
-// 	 }),
-// 	 blood: Joi.number().valid(1, 2, 3, 4).required().messages({
-// 		'any.required': `Missing required blood field`,
-// 	 }),
-// 	 sex: Joi.string().valid('male', 'female').messages({
-// 		'any.required': `Missing required sex field`,
-// 	 }),
-// 	 levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
-// 		'any.required': `Missing required levelActivity field`,
-// 	 }),
-// })
+const addUserDataSchemaJoi = Joi.object({
+	height: Joi.number().min(35).required().messages({
+		'any.required': `Missing required height field`,
+	 }),
+	currentWeight: Joi.number().min(35).required().messages({
+		'any.required': `Missing required currentWeigth field`,
+	 }),
+	 desiredWeight: Joi.number().min(35).required().messages({
+		'any.required': `Missing required desiredWeight field`,
+	 }),
+	birthday: Joi.date().required().messages({
+		'any.required': `Missing required birthday field`,
+	 }),
+	 blood: Joi.number().valid(1, 2, 3, 4).required().messages({
+		'any.required': `Missing required blood field`,
+	 }),
+	 sex: Joi.string().valid('male', 'female').messages({
+		'any.required': `Missing required sex field`,
+	 }),
+	 levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
+		'any.required': `Missing required levelActivity field`,
+	 }),
+})
 
 const schemas = {
   registerSchema,
   loginSchema,
   emailSchema,
-//   addUserDataSchemaJoi
+  addUserDataSchemaJoi
 };
 
 const User = model('user', userSchema);
