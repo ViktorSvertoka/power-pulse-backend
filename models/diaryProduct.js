@@ -69,6 +69,7 @@ const productSchemaJoi = Joi.object({
 
 const delProductSchemaJoi = Joi.object({
   id: Joi.string().required(),
+  date: Joi.string()
 });
 
 const schemasProduct = { productSchemaJoi, delProductSchemaJoi };

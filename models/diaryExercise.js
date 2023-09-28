@@ -83,6 +83,7 @@ const diaryAddExerciseSchemaJoi = Joi.object({
 const diaryDelExerciseSchemaJoi = Joi.object({
 	id: Joi.string().required(),
 	// id: Schema.Types.ObjectId,
+	date: Joi.string()
 })
 
 const schemas = {
