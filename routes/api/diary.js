@@ -22,14 +22,14 @@ router.delete(
 router.post(
   '/addexercise',
   authenticate,
-  validateBody(schemas.diaryExerciseSchemaJoi),
+  validateBody(schemas.diaryAddExerciseSchemaJoi),
   ctrl.addExercise
 );
 
 router.delete(
   '/deleteexercise',
   authenticate,
-  validateBody(schemas.diaryExerciseSсhemaJoi),
+  validateBody(schemas.diaryDelExerciseSchemaJoi),
   ctrl.deleteExercise
 );
 

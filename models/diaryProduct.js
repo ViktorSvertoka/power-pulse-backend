@@ -69,9 +69,6 @@ const productSchemaJoi = Joi.object({
 
 const delProductSchemaJoi = Joi.object({
   id: Joi.string().required(),
-  date: Joi.string()
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/i)
-    .required(),
 });
 
 const schemasProduct = { productSchemaJoi, delProductSchemaJoi };

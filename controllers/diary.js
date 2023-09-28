@@ -52,14 +52,9 @@ const getProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   const { id } = req.body;
-
-
-  // const { _id: owner } = req.user;
-
   const product = await Product.findByIdAndDelete({
     _id: id,
   });
-  console.log('product', product);
   if (!product) {
     throw HttpError(404, 'Not found');
   }
@@ -67,34 +62,62 @@ const deleteProduct = async (req, res) => {
 };
 
 const addExercise = async (req, res) => {
-  const { _id: owner } = req.user;
-  const result = await diaryExercise.create({ ...req.body, owner });
-  res.status(201).json(result);
+	const { _id: owner } = req.user;
+	const {
+		exerciseId,
+		date,
+		time,
+		burnedCalories,
+		bodyPart,
+		equipment,
+		name,
+		target,
+	} = req.body;
+ 
+	const oldResult = await diaryExercise.find({ date, exerciseId, owner });
+	if (oldResult.length === 0) {
+	  const newDiaryExercise = await diaryExercise.create({ ...req.body, owner });
+	  res.status(201).json(newDiaryExercise);
+	} else {
+	  const updateData = {
+		 $set: {
+			time: time + oldResult[0]['time'],
+			burnedCalories: burnedCalories + oldResult[0]['burnedCalories'],
+			bodyPart,
+			equipment,
+			name,
+			target,
+		},
+	  };
+	  const result = await diaryExercise.findOneAndUpdate(
+		 { date, exerciseId, owner },
+		 updateData,
+		 { new: true }
+	  );
+	  res.status(200).json(result);
+	}
 };
 
 const getExercise = async (req, res) => {
-  const { _id: owner } = req.user;
-  const products = await diaryExercise.find({
-    owner,
-    exerciseId: { $exists: true },
-  });
-  res.json(products);
+	const { _id: owner } = req.user;
+	const { date } = req.query;
+	const filter = { date, owner };
+	const exercises = await diaryExercise.find(filter);
+	if (!exercises) {
+	  throw HttpError(204, 'There are no entries in the diary for this date');
+	}
+	res.json(exercises);
 };
 
 const deleteExercise = async (req, res) => {
-  const data = req.body;
-  const { _id: owner } = req.user;
-
-  const doneExercise = await diaryExercise.findOne({
-    data,
-    owner,
-    exerciseId: { $exists: true },
-  });
-  if (!doneExercise) {
-    throw HttpError(404, 'Not found');
-  }
-  await diaryExercise.findByIdAndDelete(doneExercise._id);
-  res.status(200).json({ message: 'Exercise deleted' });
+	const { id } = req.body;
+	const exercise = await diaryExercise.findByIdAndDelete({
+	  _id: id,
+	});
+	if (!exercise) {
+	  throw HttpError(404, 'Not found');
+	}
+	res.status(200).json({ message: 'Exercise deleted' });
 };
 
 module.exports = {
