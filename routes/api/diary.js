@@ -15,7 +15,7 @@ router.post(
 router.delete(
   '/deleteproduct',
   authenticate,
-  // validateBody(schemasProduct.delProductSchemaJoi),
+  validateBody(schemasProduct.delProductSchemaJoi),
   ctrl.deleteProduct
 );
 
