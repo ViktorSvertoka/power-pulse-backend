@@ -72,7 +72,7 @@ const addProduct = async (req, res) => {
 
   const oldResult = await Diary.findOne({ date, owner });
 
-  if (oldResult.length === 0) {
+  if (!oldResult) {
     console.log('oldResult.length === 0');
     const newDiaryProduct = await Diary.create({
       owner,
@@ -147,20 +147,25 @@ const addExercise = async (req, res) => {
   const filter = { date, owner };
   console.log(filter);
 
-  const oldResult = await Diary.find(filter);
+  try {
+    const oldResult = await Diary.findOne(filter);
 
-  if (oldResult.length === 0) {
-    console.log('oldResult.length === 0');
-    const newDiaryExercise = await Diary.create({
-      owner,
-      date,
-      exercises: [newExercise],
-    });
-    res.status(201).json(newDiaryExercise);
-  } else {
-    console.log('oldResult.length !== 0');
+    if (!oldResult) {
+      console.log('No existing diary entry for this date. Creating a new one.');
+      const newDiaryExercise = await Diary.create({
+        owner,
+        date,
+        exercises: [newExercise],
+        products: [], // Add an empty products array if needed
+      });
+      return res.status(201).json(newDiaryExercise);
+    }
 
+    console.log('Existing diary entry found. Updating.');
+
+    oldResult.exercises = oldResult.exercises || [];
     oldResult.exercises.push(newExercise);
+
     const burnedCaloriesSum = oldResult.exercises.reduce(
       (sum, exercise) => sum + exercise.burnedCalories,
       0
@@ -176,6 +181,9 @@ const addExercise = async (req, res) => {
     const result = await oldResult.save();
     console.log(result);
     res.status(200).json(result);
+  } catch (error) {
+    console.error('Error adding or updating exercise:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
@@ -184,8 +192,7 @@ const deleteProduct = async (req, res) => {
   console.log('req.query', req.query);
   const { _id: owner } = req.user;
 
-  const filterDate = date;
-  const filter = { owner, filterDate };
+  const filter = { owner: owner, date: date };
   console.log(filter);
 
   const user = await Diary.findOne(filter);
@@ -223,14 +230,35 @@ const getExercise = async (req, res) => {
 };
 
 const deleteExercise = async (req, res) => {
-  const { id } = req.body;
-  const exercise = await diaryExercise.findByIdAndDelete({
-    _id: id,
-  });
-  if (!exercise) {
-    throw HttpError(404, 'Not found');
+  const { id, date } = req.query;
+  console.log('req.query', req.query);
+  const { _id: owner } = req.user;
+
+  const filter = { owner: owner, date: date };
+  console.log(filter);
+
+  const user = await Diary.findOne(filter);
+  console.log('user', user);
+
+  if (!user) {
+    throw HttpError(404, 'User not found :(');
   }
-  res.status(200).json({ message: 'Exercise deleted' });
+
+  const exercise = user.exercises.find(
+    exercise => exercise._id.toString() === id
+  );
+
+  if (!exercise) {
+    throw HttpError(404, 'Exercise not found :(');
+  }
+
+  await Diary.findOneAndUpdate(
+    filter,
+    { $pull: { exercises: { _id: exercise._id } } },
+    { new: true }
+  );
+
+  res.status(200).json({ message: 'Product deleted' });
 };
 
 module.exports = {

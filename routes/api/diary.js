@@ -23,7 +23,7 @@ router.post(
 router.delete(
   '/deleteexercise',
   authenticate,
-  validateBody(schemas.diaryDelExerciseSchemaJoi),
+  validateBody(schemas.delExerciseSchemaJoi),
   ctrl.deleteExercise
 );
 
