@@ -107,6 +107,7 @@ const emailSchema = Joi.object({
 });
 
 const addUserDataSchemaJoi = Joi.object({
+	name: Joi.string().required(),
 	height: Joi.number().min(35).required().messages({
 		'any.required': `Missing required height field`,
 	 }),

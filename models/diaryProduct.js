@@ -11,7 +11,7 @@ const productSchema = new Schema(
     },
     owner: {
       type: Schema.Types.ObjectId,
-      required: false,
+      required: true,
     },
     date: {
       type: String,
@@ -71,7 +71,10 @@ const delProductSchemaJoi = Joi.object({
   id: Joi.string().required(),
 });
 
-const schemasProduct = { productSchemaJoi, delProductSchemaJoi };
+const schemasProduct = {
+	productSchemaJoi,
+	delProductSchemaJoi
+};
 
 const Product = model('diaryproduct', productSchema);
 
