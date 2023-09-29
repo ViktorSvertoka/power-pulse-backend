@@ -36,6 +36,8 @@ router.post('/logout', authenticate, ctrl.logout);
 
 router.patch('/', authenticate, validateBody(schemas.addUserDataSchemaJoi), ctrl.addUserData);
 
+router.patch('/params', authenticate, validateBody(schemas.addUserParamsSchemaJoi), ctrl.addUserData);
+
 router.get('/getuser', authenticate, ctrl.getUserParams);
 
 router.patch(
