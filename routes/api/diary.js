@@ -1,6 +1,5 @@
 const express = require('express');
-const { schemasProduct } = require('../../models/diaryProduct');
-const { schemas } = require('../../models/diaryExercise');
+const { schemas } = require('../../models/diary');
 const router = express.Router();
 const { validateBody, authenticate } = require('../../middlewares');
 const ctrl = require('../../controllers/diary');
@@ -8,21 +7,16 @@ const ctrl = require('../../controllers/diary');
 router.post(
   '/addproduct',
   authenticate,
-  validateBody(schemasProduct.productSchemaJoi),
+  validateBody(schemas.productSchemaJoi),
   ctrl.addProduct
 );
 
-router.delete(
-  '/deleteproduct',
-  authenticate,
-  validateBody(schemasProduct.delProductSchemaJoi),
-  ctrl.deleteProduct
-);
+router.delete('/deleteproduct', authenticate, ctrl.deleteProduct);
 
 router.post(
   '/addexercise',
   authenticate,
-  validateBody(schemas.diaryAddExerciseSchemaJoi),
+  validateBody(schemas.exerciseSchemaJoi),
   ctrl.addExercise
 );
 
@@ -33,8 +27,6 @@ router.delete(
   ctrl.deleteExercise
 );
 
-router.get('/getproduct', authenticate, ctrl.getProduct);
-
-router.get('/getexercise', authenticate, ctrl.getExercise);
+router.get('/', authenticate, ctrl.getDiary);
 
 module.exports = router;
