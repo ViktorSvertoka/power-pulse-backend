@@ -118,13 +118,16 @@ const login = async (req, res) => {
 };
 
 const current = async (req, res) => {
-  const { name, email, avatarURL } = req.user;
-
-  res.status(200).json({
-    name,
-    email,
-    avatarURL,
-  });
+	try {
+		const { email } = req.user;
+		const result = await User.findOne({ email });
+		if (!result) {
+		  HttpError(404, 'Not found');
+		}
+		res.status(200).json(result);
+	 } catch (error) {
+		next(error);
+	 }
 };
 
 const logout = async (req, res) => {
