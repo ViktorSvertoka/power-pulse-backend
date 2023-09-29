@@ -5,13 +5,13 @@ const { handleMongooseError } = require('../helpers');
 const diaryExerciseSchema = new Schema(
   {
    	exerciseId: {
-      type: String,
-      ref: 'exercise',
-     
+			type: String,
+			ref: 'exercise',
+			required: true,
    	},
 		owner: {
-      type: Schema.Types.ObjectId,
-  
+      	type: Schema.Types.ObjectId,
+			required: true,
    	},
    	date: {
       type: String,
@@ -21,27 +21,28 @@ const diaryExerciseSchema = new Schema(
    	time: {
       type: Number,
       min: 1,
-  
+		required: true,
    	},
    	burnedCalories: {
       type: Number,
       min: 1,
-  
+		required: true,
    	},
 		bodyPart: {
 		type: String,
-	
+	   required: true,
 		},
 		equipment: {
 		type: String,
-	
+	   required: true,
 		},
 		name: {
 		type: String,
-		
+		required: true,
 		},
 		target: {
 		type: String,
+		required: true,
 		}
 	
   },
@@ -64,8 +65,6 @@ const diaryAddExerciseSchemaJoi = Joi.object({
 
 const diaryDelExerciseSchemaJoi = Joi.object({
 	id: Joi.string().required(),
-	// id: Schema.Types.ObjectId,
-	date: Joi.string()
 })
 
 const schemas = {
