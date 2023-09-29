@@ -148,7 +148,7 @@ const addExercise = async (req, res) => {
   console.log(filter);
 
   try {
-    let oldResult = await Diary.findOne(filter);
+    const oldResult = await Diary.findOne(filter);
 
     if (!oldResult) {
       console.log('No existing diary entry for this date. Creating a new one.');
@@ -163,7 +163,6 @@ const addExercise = async (req, res) => {
 
     console.log('Existing diary entry found. Updating.');
 
-    // Ensure oldResult.exercises is an array
     oldResult.exercises = oldResult.exercises || [];
     oldResult.exercises.push(newExercise);
 
