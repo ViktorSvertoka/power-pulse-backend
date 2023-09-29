@@ -105,10 +105,16 @@ const delProductSchemaJoi = Joi.object({
   id: Joi.string().required(),
   date: Joi.string().regex(/^\d{2}\/\d{2}\/\d{4}$/i),
 });
+
+const delExerciseSchemaJoi = Joi.object({
+  id: Joi.string(),
+});
+
 const schemas = {
   productSchemaJoi,
   exerciseSchemaJoi,
   delProductSchemaJoi,
+  delExerciseSchemaJoi,
 };
 
 const Diary = model('diary', diarySchema);
