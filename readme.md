@@ -1,3 +1,9 @@
+# React & Node.js app
+
+![Presentation](./assets/page-1.jpg)
+
+![Presentation](./assets/presentation.gif)
+
 # Development team :
 
 - [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ViktorSvertoka)
@@ -39,7 +45,7 @@
 
 - Feat(HTML) Added new functionality
 
-- Fix(JS) Error correction
+- Fix(JSX) Error correction
 
 - Perf(JPEG) Changes to improve performance
 
@@ -55,27 +61,17 @@ Choose from the list the description of the commit that fits your task, in
 brackets we write the file in which we worked, and in the body of the commit we
 write what we did (changed) etc.
 
-### Команди:
+- `Look at`
+  [**Layout Figma**](https://www.figma.com/file/FHAaMcWwZCDbzWPlowFhEf/Power-Pulse?type=design&node-id=0-1&mode=design)
 
-- `npm install` &mdash; старт
-- `npm start` &mdash; старт сервера в режимі production
-- `npm run start:dev` &mdash; старт сервера в режимі розробки (development)
-- `npm run lint` &mdash; запустити виконання перевірки коду з eslint, необхідно
-  виконувати перед кожним PR та виправляти всі помилки лінтера
-- `npm lint:fix` &mdash; та ж перевірка лінтера, але з автоматичними
-  виправленнями простих помилок
+### Commands:
 
----
-
-<!-- docker build . -->
-<!-- docker images -->
-<!-- docker run + id -->
-<!-- docker ps -->
-<!-- docker stop + id -->
-<!-- docker start + id -->
-
-yarn add @sendgrid/mail
-
-### Swagger
+- `npm install` &mdash; start
+- `npm start` &mdash; server start in production mode
+- `npm run start:dev` &mdash; start the server in development mode
+- `npm run lint` &mdash; run a code check execution with eslint is necessary run
+  before each PR and fix all linter errors
+- `npm lint:fix` &mdash; same linter check but with automatic ones corrections
+  of simple errors
 
 https://power-pulse-back-end.onrender.com/api-docs/
