@@ -3,9 +3,6 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { User } = require('../models/user');
 const gravatar = require('gravatar');
-const path = require('path');
-const fs = require('fs/promises');
-const Jimp = require('jimp');
 
 const {
   sendEmail,
@@ -16,8 +13,6 @@ const {
 } = require('../helpers');
 
 const { SECRET_KEY } = process.env;
-
-const avatarDir = path.join(__dirname, '../', 'public', 'avatars');
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -141,19 +136,16 @@ const logout = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
-  const { path: tempUpload, originalname } = req.file;
-  const img = await Jimp.read(tempUpload);
-  await img
-    .autocrop()
-    .cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_MIDDLE)
-    .writeAsync(tempUpload);
-  const filename = `${Date.now()}-${originalname}`;
-  const resultUpload = path.join(avatarDir, filename);
-  await fs.rename(tempUpload, resultUpload);
-  const avatarURL = path.join('avatars', filename);
-  await User.findByIdAndUpdate(_id, { avatarURL });
-  res.status(200).json({ avatarURL });
+  try {
+    const { _id } = req.user;
+
+    const avatarURL = req.file.url;
+
+    await User.findByIdAndUpdate(_id, { avatarURL });
+    res.status(200).json({ avatarURL });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
 const addUserData = async (req, res) => {
