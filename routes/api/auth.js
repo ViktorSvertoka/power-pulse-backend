@@ -47,6 +47,11 @@ router.patch(
 
 router.get('/getuser', authenticate, ctrl.getUserParams);
 
-router.patch('/avatars', authenticate, uploadCloud, ctrl.updateAvatar);
+router.patch(
+  '/avatars',
+  authenticate,
+  uploadCloud.single('avatar'),
+  ctrl.updateAvatar
+);
 
 module.exports = router;
