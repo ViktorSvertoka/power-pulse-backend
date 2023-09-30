@@ -6,7 +6,7 @@ const { schemas } = require('../../models/user');
 
 const { validateBody, checkBody, authenticate } = require('../../middlewares');
 
-const fileUploadMiddleware = require('../../middlewares/upload');
+const uploadCloud = require('../../middlewares/uploadCloud');
 
 const router = express.Router();
 
@@ -47,6 +47,6 @@ router.patch(
 
 router.get('/getuser', authenticate, ctrl.getUserParams);
 
-router.patch('/avatars', authenticate, fileUploadMiddleware, ctrl.updateAvatar);
+router.patch('/avatars', authenticate, uploadCloud, ctrl.updateAvatar);
 
 module.exports = router;
