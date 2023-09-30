@@ -138,12 +138,21 @@ const logout = async (req, res) => {
 const updateAvatar = async (req, res) => {
   try {
     const { _id } = req.user;
+    const avatarURL = req.file.path;
 
-    const avatarURL = req.file.url;
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { avatarURL },
+      { new: true }
+    );
 
-    await User.findByIdAndUpdate(_id, { avatarURL });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     res.status(200).json({ avatarURL });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
