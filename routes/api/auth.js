@@ -4,12 +4,9 @@ const ctrl = require('../../controllers/auth');
 
 const { schemas } = require('../../models/user');
 
-const {
-  validateBody,
-  checkBody,
-  authenticate,
-  uploadCloud,
-} = require('../../middlewares');
+const { validateBody, checkBody, authenticate } = require('../../middlewares');
+
+const fileUploadMiddleware = require('../../middlewares/upload');
 
 const router = express.Router();
 
@@ -34,17 +31,22 @@ router.get('/current', authenticate, ctrl.current);
 
 router.post('/logout', authenticate, ctrl.logout);
 
-router.patch('/', authenticate, validateBody(schemas.addUserDataSchemaJoi), ctrl.addUserData);
+router.patch(
+  '/',
+  authenticate,
+  validateBody(schemas.addUserDataSchemaJoi),
+  ctrl.addUserData
+);
 
-router.patch('/params', authenticate, validateBody(schemas.addUserParamsSchemaJoi), ctrl.addUserData);
+router.patch(
+  '/params',
+  authenticate,
+  validateBody(schemas.addUserParamsSchemaJoi),
+  ctrl.addUserData
+);
 
 router.get('/getuser', authenticate, ctrl.getUserParams);
 
-router.patch(
-  '/avatars',
-  authenticate,
-  uploadCloud.single('avatar'),
-  ctrl.updateAvatar
-);
+router.patch('/avatars', authenticate, fileUploadMiddleware, ctrl.updateAvatar);
 
 module.exports = router;
