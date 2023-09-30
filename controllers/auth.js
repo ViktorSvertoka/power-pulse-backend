@@ -1,12 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const gravatar = require('gravatar');
 const { User } = require('../models/user');
-const nanoid = require('nanoid');
-const path = require("path");
-const fs = require("fs/promises");
-const Jimp = require("jimp");
+const gravatar = require('gravatar');
 
 const {
   sendEmail,
@@ -17,7 +13,6 @@ const {
 } = require('../helpers');
 
 const { SECRET_KEY } = process.env;
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -28,12 +23,12 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email); 
+  const avatarURL = gravatar.url(email);
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    avatarURL,	
+    avatarURL,
   });
 
   const payload = { id: newUser._id };
@@ -113,21 +108,21 @@ const login = async (req, res) => {
 
   res.status(200).json({
     token: token,
-    user: user
+    user: user,
   });
 };
 
-const current = async (req, res) => {
-	try {
-		const { email } = req.user;
-		const result = await User.findOne({ email });
-		if (!result) {
-		  HttpError(404, 'Not found');
-		}
-		res.status(200).json(result);
-	 } catch (error) {
-		next(error);
-	 }
+const current = async (req, res, next) => {
+  try {
+    const { email } = req.user;
+    const result = await User.findOne({ email });
+    if (!result) {
+      HttpError(404, 'Not found');
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const logout = async (req, res) => {
@@ -141,19 +136,16 @@ const logout = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
-	const {_id} = req.user;
-	const {path: tempUpload, originalname} = req.file;
-	const filename = `${_id}_${originalname}`;
-	const resultUpload = path.join(avatarsDir, filename);
-	await fs.rename(tempUpload, resultUpload);
-	const image = await Jimp.read(resultUpload);
-   await image.resize(250, 250).write(resultUpload);
-	const avatarURL = path.join("avatars", filename);
-	await User.findByIdAndUpdate(_id, {avatarURL});
-	res.json({
-		avatarURL,
-	})
-  res.status(200).json({ avatarURL });
+  try {
+    const { _id } = req.user;
+
+    const avatarURL = req.file.url;
+
+    await User.findByIdAndUpdate(_id, { avatarURL });
+    res.status(200).json({ avatarURL });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
 const addUserData = async (req, res) => {
@@ -206,7 +198,6 @@ module.exports = {
   current: ctrlWrapper(current),
   logout: ctrlWrapper(logout),
   updateAvatar: ctrlWrapper(updateAvatar),
-
   verifyEmail: ctrlWrapper(verifyEmail),
   repeatEmailVerify: ctrlWrapper(repeatEmailVerify),
   addUserData: ctrlWrapper(addUserData),
