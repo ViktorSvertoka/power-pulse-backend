@@ -4,9 +4,12 @@ const ctrl = require('../../controllers/auth');
 
 const { schemas } = require('../../models/user');
 
-const { validateBody, checkBody, authenticate } = require('../../middlewares');
-
-const uploadCloud = require('../../middlewares/uploadCloud');
+const {
+  validateBody,
+  checkBody,
+  authenticate,
+  uploadCloud,
+} = require('../../middlewares');
 
 const router = express.Router();
 
