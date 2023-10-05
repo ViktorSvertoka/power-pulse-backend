@@ -22,16 +22,16 @@ const userSchema = new Schema(
       required: [true, 'Password is required'],
     },
     height: {
-      type: Number,   
-		default: 150  
+      type: Number,
+      default: 150,
     },
     currentWeight: {
       type: Number,
-		default: 60      
+      default: 60,
     },
     desiredWeight: {
       type: Number,
-		default: 60      
+      default: 60,
     },
     birthday: {
       type: Date,
@@ -41,36 +41,32 @@ const userSchema = new Schema(
           return age >= 18;
         },
         message: 'The user must be over 18 years old.',
-      },      
-		default: 25/10/1995
+      },
+      default: 25 / 10 / 1995,
     },
     blood: {
       type: Number,
-      enum: [1, 2, 3, 4], 
-		default: 1       
+      enum: [1, 2, 3, 4],
+      default: 1,
     },
     sex: {
       type: String,
       enum: ['male', 'female'],
-		default: "male"
+      default: 'male',
     },
     levelActivity: {
       type: Number,
       enum: [1, 2, 3, 4, 5],
-		default: 1      
+      default: 1,
     },
     token: {
-      type: String,      
+      type: String,
     },
     bmr: {
       type: Number,
-		default: 2200  
+      default: 2200,
     },
     avatarURL: {
-      type: String,
-      required: true,
-    },
-    avatarPublicId: {
       type: String,
     },
   },
@@ -107,60 +103,60 @@ const emailSchema = Joi.object({
 });
 
 const addUserDataSchemaJoi = Joi.object({
-	height: Joi.number().min(35).required().messages({
-		'any.required': `Missing required height field`,
-	 }),
-	currentWeight: Joi.number().min(35).required().messages({
-		'any.required': `Missing required currentWeigth field`,
-	 }),
-	 desiredWeight: Joi.number().min(35).required().messages({
-		'any.required': `Missing required desiredWeight field`,
-	 }),
-	birthday: Joi.date().required().messages({
-		'any.required': `Missing required birthday field`,
-	 }),
-	 blood: Joi.number().valid(1, 2, 3, 4).required().messages({
-		'any.required': `Missing required blood field`,
-	 }),
-	 sex: Joi.string().lowercase().valid('male', 'female').messages({
-		'any.required': `Missing required sex field`,
-	 }),
-	 levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
-		'any.required': `Missing required levelActivity field`,
-	 }),
+  height: Joi.number().min(35).required().messages({
+    'any.required': `Missing required height field`,
+  }),
+  currentWeight: Joi.number().min(35).required().messages({
+    'any.required': `Missing required currentWeigth field`,
+  }),
+  desiredWeight: Joi.number().min(35).required().messages({
+    'any.required': `Missing required desiredWeight field`,
+  }),
+  birthday: Joi.date().required().messages({
+    'any.required': `Missing required birthday field`,
+  }),
+  blood: Joi.number().valid(1, 2, 3, 4).required().messages({
+    'any.required': `Missing required blood field`,
+  }),
+  sex: Joi.string().lowercase().valid('male', 'female').messages({
+    'any.required': `Missing required sex field`,
+  }),
+  levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
+    'any.required': `Missing required levelActivity field`,
+  }),
 });
 
 const addUserParamsSchemaJoi = Joi.object({
-	name: Joi.string().required(),
-	height: Joi.number().min(35).required().messages({
-		'any.required': `Missing required height field`,
-	 }),
-	currentWeight: Joi.number().min(35).required().messages({
-		'any.required': `Missing required currentWeigth field`,
-	 }),
-	 desiredWeight: Joi.number().min(35).required().messages({
-		'any.required': `Missing required desiredWeight field`,
-	 }),
-	birthday: Joi.date().required().messages({
-		'any.required': `Missing required birthday field`,
-	 }),
-	 blood: Joi.number().valid(1, 2, 3, 4).required().messages({
-		'any.required': `Missing required blood field`,
-	 }),
-	 sex: Joi.string().lowercase().valid('male', 'female').messages({
-		'any.required': `Missing required sex field`,
-	 }),
-	 levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
-		'any.required': `Missing required levelActivity field`,
-	 }),
-})
+  name: Joi.string().required(),
+  height: Joi.number().min(35).required().messages({
+    'any.required': `Missing required height field`,
+  }),
+  currentWeight: Joi.number().min(35).required().messages({
+    'any.required': `Missing required currentWeigth field`,
+  }),
+  desiredWeight: Joi.number().min(35).required().messages({
+    'any.required': `Missing required desiredWeight field`,
+  }),
+  birthday: Joi.date().required().messages({
+    'any.required': `Missing required birthday field`,
+  }),
+  blood: Joi.number().valid(1, 2, 3, 4).required().messages({
+    'any.required': `Missing required blood field`,
+  }),
+  sex: Joi.string().lowercase().valid('male', 'female').messages({
+    'any.required': `Missing required sex field`,
+  }),
+  levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
+    'any.required': `Missing required levelActivity field`,
+  }),
+});
 
 const schemas = {
   registerSchema,
   loginSchema,
   emailSchema,
   addUserDataSchemaJoi,
-  addUserParamsSchemaJoi
+  addUserParamsSchemaJoi,
 };
 
 const User = model('user', userSchema);
